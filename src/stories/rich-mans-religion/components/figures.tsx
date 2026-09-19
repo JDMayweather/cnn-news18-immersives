@@ -1,0 +1,194 @@
+import gsap from "gsap";
+import { useScene, drawPaths } from "./motion";
+import { theme } from "../theme";
+import { PRICE_LADDER, type FigureRef } from "../assets/article";
+
+/**
+ * Figures, restricted to what the article itself states.
+ *
+ * An earlier build carried a cost breakdown, a willow price series and a
+ * four-sport comparison. None of those numbers are in the reporting, so they
+ * are gone rather than estimated: a chart the piece cannot source is a claim.
+ *
+ * What is left: the five names the article lists, the desk's own planner, the
+ * glove arithmetic a manufacturer gave on the record, and the places the
+ * chapter reports from.
+ */
+
+const inr = (n: number): string => `₹${n.toLocaleString("en-IN")}`;
+
+/* ---------------------------------------------- the names, as the article lists them */
+
+/**
+ * Names only. The paragraph above this figure carries every clause exactly as
+ * the article filed it; the figure is an index of who those clauses are about,
+ * so nothing is said twice and nothing new is said.
+ */
+const KNOWN = ["Kranti Gaud", "Sakib Hussain", "Mukul Choudhary", "Yashasvi Jaiswal", "Tilak Varma"];
+
+export function KnownNames(): React.JSX.Element {
+  return (
+    <div className="rm-fig">
+      <p className="rm-fig-label">Some names you might know</p>
+      <ul className="names">
+        {KNOWN.map((name, i) => (
+          <li className="name-row name-row--one rm-rise" key={name}>
+            <span className="name-n">{String(i + 1).padStart(2, "0")}</span>
+            <span className="name-v name-v--solo">{name}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+/* ---------------------------------------------- the desk's own planner */
+
+export function BudgetPlanner(): React.JSX.Element {
+  return (
+    <div className="rm-fig">
+      <iframe
+        className="planner"
+        id="cricket-budget-planner"
+        title="Cricket budget and setup planner"
+        src="https://images.news18.com/ibnlive/uploads/html-embed/cricket-budget-setup-planner-cricket-budget-setup-planner-20260918011146.html"
+        width="100%"
+        height={980}
+        loading="lazy"
+        scrolling="no"
+      />
+    </div>
+  );
+}
+
+/* ---------------------------------------------- one pair of gloves, workshop to shop */
+
+export function PriceLadder(): React.JSX.Element {
+  const steps = PRICE_LADDER.steps;
+  const scaleMax = PRICE_LADDER.mrp6;
+  const ref = useScene<HTMLDivElement>((root) => {
+    const bars = gsap.utils.toArray<HTMLElement>(root.querySelectorAll(".wf-fill"));
+    gsap.set(bars, { transformOrigin: "left center", scaleX: 0 });
+    gsap.to(bars, {
+      scaleX: 1,
+      duration: 1,
+      ease: "power3.out",
+      stagger: 0.12,
+      scrollTrigger: { trigger: root, start: "top 78%", once: true },
+    });
+    const jump = root.querySelector<HTMLElement>(".wf-jump");
+    if (jump) {
+      gsap.fromTo(
+        jump,
+        { opacity: 0, y: 10 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.7,
+          ease: "power2.out",
+          delay: 0.45,
+          scrollTrigger: { trigger: root, start: "top 78%", once: true },
+        },
+      );
+    }
+  });
+
+  return (
+    <div className="rm-fig" ref={ref}>
+      <p className="rm-fig-label">One pair of batting gloves</p>
+      <div className="wf">
+        {steps.map((s) => (
+          <div className="wf-row" key={s.k}>
+            <p className="wf-k">{s.k}</p>
+            <div className="wf-track">
+              <span className="wf-fill" style={{ width: `${(s.v / scaleMax) * 100}%` }} />
+            </div>
+            <p className="wf-v">{inr(s.v)}</p>
+            <p className="wf-note">{s.note}</p>
+          </div>
+        ))}
+        <div className="wf-jump">
+          <span className="wf-jump-line" />
+          <p className="wf-jump-v">
+            They take the same glove that cost them {inr(PRICE_LADDER.factoryGate)} from us, put an MRP of{" "}
+            {inr(PRICE_LADDER.mrp3)}, {inr(PRICE_LADDER.mrp4)}, even {inr(PRICE_LADDER.mrp6)} on it
+            <span aria-hidden="true"> &#8594;</span>
+          </p>
+        </div>
+        <div className="wf-row wf-row--pay">
+          <p className="wf-k">then offer a {PRICE_LADDER.discount}% discount, so the customer happily pays</p>
+          <div className="wf-track">
+            <span className="wf-fill wf-fill--accent" style={{ width: `${(PRICE_LADDER.paid / scaleMax) * 100}%` }} />
+          </div>
+          <p className="wf-v">{PRICE_LADDER.paidLabel}</p>
+          <p className="wf-note">sold directly to a customer, my genuine price would be {inr(PRICE_LADDER.directPrice)}</p>
+        </div>
+      </div>
+      <p className="rm-fig-cap">Varun Kumar, Apex Cricket (JS Enterprises), Meerut.</p>
+    </div>
+  );
+}
+
+/* ---------------------------------------------- the places the chapter reports from */
+
+/* India outline: coarse public-domain geometry (world.geo.json), projected
+   once, offline, to a 460×520 viewBox. Dots placed by latitude/longitude. */
+/* India outline: datameet boundary geometry, simplified once, offline, to a
+   460×520 viewBox. Dots placed by latitude/longitude. */
+const INDIA_OUTLINE =
+  "M155.8 68.8L161.3 69.1L161.7 67.8L164.8 67.9L166.0 65.4L173.8 63.4L174.6 61.9L177.1 62.8L181.5 61.7L183.5 63.7L184.7 63.0L186.6 66.6L190.7 67.2L191.5 69.7L193.7 67.5L196.6 68.9L194.8 70.7L193.6 77.2L191.8 79.8L187.7 80.9L187.9 83.0L183.8 83.4L185.2 86.4L182.3 89.7L175.1 90.1L177.9 94.9L175.4 95.1L175.8 98.5L178.2 101.0L182.4 101.2L181.3 103.8L184.4 108.4L182.5 110.6L180.5 110.1L176.2 113.2L173.5 111.2L173.0 108.1L168.1 110.5L169.4 114.1L173.5 118.0L172.5 120.7L174.5 123.5L172.7 124.9L173.5 127.6L175.2 128.0L178.1 125.6L182.7 131.7L185.2 132.9L188.9 132.4L194.1 135.4L193.8 138.0L205.3 142.7L195.9 149.7L196.5 151.8L194.2 154.0L194.9 157.4L192.8 158.8L191.8 162.7L198.0 166.6L198.8 164.6L207.8 169.3L209.3 172.5L211.1 172.1L217.3 176.4L219.9 175.4L225.3 178.9L228.9 178.3L229.3 181.4L235.7 182.0L237.5 183.8L238.5 181.7L245.2 183.6L245.0 182.2L249.3 181.2L251.3 183.0L255.9 183.7L256.2 187.8L260.7 189.0L261.6 190.5L263.9 190.3L264.2 191.8L270.1 190.2L273.3 194.5L275.7 193.1L280.0 193.8L285.6 196.6L290.5 194.3L290.7 196.2L294.2 197.6L302.0 195.7L303.7 197.4L306.2 192.1L305.4 188.7L303.4 186.8L306.3 177.3L305.2 175.5L312.5 172.7L315.3 174.1L316.1 176.4L314.3 180.5L316.4 184.3L314.1 186.4L315.8 186.9L315.9 189.2L316.5 188.5L319.5 191.2L323.0 190.4L329.8 192.6L336.7 189.8L341.8 191.7L355.6 191.2L358.4 189.6L360.7 190.6L361.6 189.0L360.5 184.8L361.7 184.4L360.2 181.7L355.0 181.6L353.8 179.5L354.9 177.7L358.9 178.3L363.4 175.9L366.4 177.3L370.2 174.7L369.5 172.2L372.9 171.5L380.0 165.0L384.1 165.0L391.8 161.2L393.3 159.9L392.3 158.1L397.0 156.1L399.5 157.9L405.9 159.3L417.1 154.8L420.6 157.5L419.0 159.7L421.0 158.7L425.2 164.0L422.1 167.2L423.4 168.3L423.3 166.7L426.4 165.7L429.4 169.4L432.2 169.2L435.5 171.5L434.8 173.5L436.0 174.2L435.6 176.1L433.9 175.8L428.9 179.9L432.4 187.2L428.6 185.8L428.8 184.8L426.3 183.2L419.6 184.5L408.3 192.7L404.3 193.9L403.1 196.2L404.8 201.5L402.4 204.0L402.9 205.9L400.8 208.7L397.1 211.1L396.2 213.6L398.6 214.9L398.2 217.6L393.7 223.9L390.3 232.9L384.7 230.7L381.2 231.5L378.7 229.6L380.2 235.2L379.5 242.9L378.2 244.7L375.8 244.2L375.5 251.5L376.9 255.2L376.2 256.4L374.6 256.2L374.1 259.1L373.3 258.5L372.7 259.8L369.8 256.7L368.4 259.2L363.9 234.7L360.6 235.7L359.3 234.5L359.5 238.1L356.6 240.6L357.6 243.5L354.6 245.7L352.2 241.2L351.2 241.9L351.7 243.9L350.7 243.4L350.3 239.8L348.1 236.2L351.1 229.2L354.1 229.7L355.2 227.4L356.6 228.7L356.3 227.2L358.5 228.8L358.8 226.0L362.2 224.8L364.1 220.4L363.2 218.0L367.0 218.4L365.9 216.2L360.8 214.0L338.0 214.6L329.5 212.5L329.2 205.1L330.1 203.3L327.2 199.2L325.8 203.0L322.7 202.4L319.8 200.6L318.9 196.9L316.3 196.8L318.4 199.1L312.9 198.8L314.1 197.6L309.2 193.7L308.2 195.7L310.4 196.0L310.9 197.5L306.0 200.5L305.0 205.1L307.3 205.2L311.2 209.5L315.0 209.3L315.4 211.5L317.8 212.9L316.6 214.3L309.8 213.7L309.2 217.4L308.2 218.5L305.5 217.5L306.0 218.6L303.7 221.3L308.2 225.4L313.9 226.8L314.4 231.0L311.7 232.7L311.4 235.7L314.8 237.8L313.7 241.2L317.6 241.8L315.5 244.7L317.2 247.0L316.8 251.0L319.0 256.7L317.4 260.4L319.0 264.0L316.5 264.1L315.7 262.1L315.5 264.3L313.7 263.5L314.5 258.7L312.6 257.9L311.4 261.5L310.8 259.7L310.0 260.4L309.9 264.4L309.5 262.9L309.1 264.7L309.2 262.9L307.4 262.7L307.0 265.1L305.7 259.6L306.5 256.8L303.8 255.8L306.2 257.5L300.8 263.2L290.7 265.5L288.2 268.3L287.0 271.1L289.1 275.6L287.6 276.2L290.4 277.0L285.7 279.6L285.3 281.4L286.5 281.8L284.8 283.0L286.6 282.2L282.7 284.5L281.3 287.1L279.8 287.3L280.6 287.8L268.9 291.4L261.8 295.7L249.0 311.0L240.9 315.0L236.1 321.1L223.3 328.9L222.5 331.2L224.0 331.9L223.7 329.6L224.2 330.7L222.7 333.6L224.1 333.5L223.3 335.1L222.6 333.8L223.2 335.6L214.9 339.2L212.7 338.3L208.6 339.4L204.0 347.6L202.5 347.7L202.1 345.7L200.3 345.1L194.5 348.1L191.4 356.6L193.5 363.6L192.5 370.8L195.6 381.8L193.0 393.4L189.0 399.4L187.4 404.5L189.1 423.7L185.7 423.0L180.8 424.4L180.4 427.6L175.3 435.4L176.1 437.4L179.3 438.3L174.7 438.7L166.3 442.0L163.5 451.0L156.2 455.3L152.9 454.6L148.6 451.4L142.1 443.6L143.8 442.3L142.0 443.1L139.4 437.1L138.2 427.7L137.5 428.1L137.3 425.4L133.1 417.0L132.5 412.3L127.9 404.0L123.1 399.9L117.8 388.1L116.0 381.0L116.3 376.8L112.2 367.8L113.5 368.3L112.1 367.7L110.2 361.7L107.8 360.8L108.5 359.6L104.9 356.4L104.7 353.0L103.1 351.9L104.5 351.6L102.4 349.3L103.2 348.4L102.4 349.0L98.5 342.8L97.2 338.2L98.7 337.7L97.3 338.0L96.5 336.3L98.3 336.5L96.6 335.1L97.7 334.8L96.4 333.3L96.7 329.9L95.7 328.8L96.7 328.9L94.8 325.2L96.3 325.3L94.5 323.8L94.0 321.6L95.1 321.1L94.0 320.8L92.5 316.0L93.3 315.5L91.1 312.3L91.6 311.4L93.5 313.3L93.3 310.8L92.5 311.6L91.0 310.4L90.8 307.7L92.2 308.7L90.1 305.5L91.2 303.7L92.3 305.2L90.8 302.7L93.0 300.9L92.1 301.2L91.9 298.6L89.3 302.7L89.1 296.9L90.8 297.2L88.5 294.7L90.5 293.8L88.3 293.8L87.2 289.5L90.7 279.7L89.9 276.6L91.1 276.4L89.6 275.9L89.9 273.4L88.7 274.0L88.3 273.1L89.9 272.6L87.9 271.8L89.1 270.5L87.0 271.9L87.0 270.1L88.4 270.2L86.4 268.8L88.7 266.7L87.1 266.7L87.5 266.0L91.0 263.5L85.5 263.7L86.7 260.3L88.5 259.3L85.5 260.4L85.1 259.3L86.2 256.0L88.7 256.5L90.8 255.2L85.5 254.6L84.0 256.1L82.6 254.6L82.2 257.5L80.5 258.6L81.5 260.0L80.3 259.5L82.3 264.2L79.2 268.6L79.5 270.2L70.1 274.9L61.4 277.4L52.0 272.3L34.8 254.6L36.6 252.2L36.2 253.4L38.4 253.0L38.9 255.3L42.4 254.3L42.9 252.9L45.1 254.4L45.9 252.2L47.1 253.3L49.6 251.3L52.2 251.3L56.1 245.3L53.8 245.6L52.9 244.1L52.9 245.5L48.1 246.1L45.7 248.5L42.0 248.0L40.8 246.5L38.4 247.1L30.5 242.5L31.7 242.9L29.7 241.6L31.2 240.6L27.9 238.1L28.2 237.1L27.6 237.7L29.3 234.8L33.0 232.4L28.8 234.3L27.6 233.3L26.5 236.6L24.0 236.1L26.5 234.5L24.2 234.6L26.6 231.1L32.2 231.1L33.0 226.3L33.8 227.7L34.9 226.5L35.7 227.6L44.1 226.6L46.0 228.3L50.1 228.3L51.3 226.6L57.7 224.8L57.8 227.2L59.8 227.7L65.6 225.1L63.8 224.5L63.7 222.3L65.2 221.0L62.3 214.6L59.1 211.0L59.1 206.7L53.6 206.6L51.2 203.4L52.2 194.8L47.3 194.2L42.9 192.1L43.9 185.9L55.0 174.2L58.1 174.2L60.2 178.0L62.1 178.5L76.5 174.9L83.5 163.5L91.3 159.9L96.0 152.2L97.7 146.9L105.8 143.4L104.5 141.1L105.2 139.2L107.2 138.8L112.0 132.9L116.0 131.0L113.4 130.2L113.9 126.9L115.4 126.0L113.0 122.0L114.7 119.5L118.6 117.2L123.7 116.7L125.5 114.8L121.7 111.2L115.8 111.0L116.1 106.1L115.2 107.4L111.4 107.1L105.1 103.4L101.0 102.5L100.4 91.3L97.7 84.4L98.5 81.7L101.3 81.8L102.3 79.0L106.8 77.2L108.0 74.0L102.6 72.5L101.8 70.7L103.1 68.3L97.8 68.2L96.7 66.3L93.8 65.5L94.6 63.5L86.0 63.6L85.7 58.3L91.6 54.8L92.9 51.7L104.1 51.4L101.5 48.6L106.7 49.8L112.1 47.4L114.1 47.9L115.9 46.1L118.0 46.5L118.9 48.3L122.3 47.0L126.2 48.0L126.7 51.3L130.6 50.9L134.8 55.4L144.5 59.3L146.2 63.5L153.4 65.5L155.8 68.8Z";
+
+const PLACES = [
+  { k: "Kashmir", v: "Manzoor Pandav", cx: 117.4, cy: 88.6 },
+  { k: "Aligarh", v: "Waseem Mirza", cx: 163.7, cy: 176.0 },
+  { k: "Uttarakhand", v: "Rishabh Pant", cx: 163.0, cy: 141.6 },
+  { k: "Haridwar", v: "Ashwini Maurya", cx: 164.8, cy: 146.9 },
+];
+
+export function Geography(): React.JSX.Element {
+  const ref = useScene<HTMLDivElement>((root) => {
+    drawPaths(root, ".geo-draw", { stagger: 0.08, scrub: true });
+  });
+
+  return (
+    <div className="rm-fig" ref={ref}>
+      <p className="rm-fig-label">Four places in the same country</p>
+      <div className="geo-split">
+        <ul className="geo-list">
+          {PLACES.map((p) => (
+            <li key={p.k}>
+              <span className="geo-k">{p.k}</span>
+              <span className="geo-v">{p.v}</span>
+            </li>
+          ))}
+        </ul>
+        <svg className="geo geo--map" viewBox="0 0 460 520" role="img" aria-label="Map of India with four places marked: Kashmir, Aligarh, Uttarakhand and Haridwar">
+          <path className="geo-draw" pathLength={1} d={INDIA_OUTLINE} fill={theme.colors.moss} stroke={theme.colors.greenDeep} strokeWidth={2} strokeLinejoin="round" />
+          {PLACES.map((p) => (
+            <g key={p.k}>
+              <circle cx={p.cx} cy={p.cy} r={9} fill={theme.colors.paperPanel} opacity={0.9} />
+              <circle cx={p.cx} cy={p.cy} r={5.5} fill={theme.colors.green} />
+            </g>
+          ))}
+        </svg>
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ app */
+
+export function Figure({ figure }: { figure: FigureRef }): React.JSX.Element | null {
+  switch (figure) {
+    case "knownNames":
+      return <KnownNames />;
+    case "budgetPlanner":
+      return <BudgetPlanner />;
+    case "priceLadder":
+      return <PriceLadder />;
+    case "geography":
+      return <Geography />;
+    default:
+      return null;
+  }
+}
