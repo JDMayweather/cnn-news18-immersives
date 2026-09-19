@@ -346,7 +346,7 @@ export const META = {
   published: "18 September 2026",
   readTime: "About 26 minutes",
   sources: [
-    { label: "Devajit Saikia, BCCI secretary, in interview", href: "https://youtu.be/5j1r9X_DYsE" },
+    { label: "Devajit Saikia, BCCI secretary, spoke about cricket's expenses in an interview.", href: "https://youtu.be/5j1r9X_DYsE" },
     { label: "Global Multidimensional Poverty Index 2021", href: "https://hdr.undp.org/content/2021-global-multidimensional-poverty-index-mpi" },
     { label: "Annual Status of Education Report (ASER) 2024", href: "https://asercentre.org/aser-2024/" },
     { label: "The United Nations, on child labour and caste, 2022", href: "https://www.thehindu.com/news/international/child-labour-caste-based-discrimination-poverty-closely-interlinked-in-india-un-special-rapporteur-tomoya-obokata/article65782342.ece" },
