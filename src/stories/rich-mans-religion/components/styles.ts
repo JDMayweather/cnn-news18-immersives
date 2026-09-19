@@ -327,7 +327,8 @@ section.rm-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
 @media (max-width: 860px) {
   .hero { min-height: auto; padding: 4.5rem 0 8.5rem; }
   .hero-grid { grid-template-columns: 1fr; align-items: start; gap: 2.2rem; }
-  .hero-deck { display: none; }
+  .hero-deck { max-width: none; }
+  .hero-fig { display: none; }
   .hero-dots { gap: 4px; }
   .hero-video { object-position: center 38%; }
 }
