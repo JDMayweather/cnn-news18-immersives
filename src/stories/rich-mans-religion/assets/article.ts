@@ -31,7 +31,7 @@ export type Block =
   | { kind: "note"; text: string }
   | { kind: "scene"; ref: SceneRef; label: string; steps: SceneStep[] }
   | { kind: "panel"; layout?: PhotoLayout; w?: number; h?: number; src: string; alt: string; line?: string; credit: string }
-  | { kind: "screen"; text: string; cite?: string; role?: string };
+  | { kind: "screen"; text: string; cite?: string; role?: string; tone?: "light" | "dark" };
 
 export interface SceneStep {
   k: string;
@@ -148,6 +148,7 @@ export const CHAPTERS: Chapter[] = [
     id: "the-cost",
     num: "02",
     title: "The cost",
+    dark: true,
     blocks: [
       { kind: "p", text: "In a recent interview, the Board of Control for Cricket in India (BCCI) secretary Devajit Saikia was asked about cricket being an expensive sport and how most of the current crop of international stars in India come from humble backgrounds." },
       { kind: "quote", text: "“He comes from a humble background and is at the highest level of cricket, driving the most posh vehicles; how is this possible?\" Saikia retorted. “Having a posh apartment in prime areas in the metropolises. How is it possible? … There is a concrete support system, and I’ll not disclose any further. Whoever has talent, whoever has merit, a lot of people are supporting. I haven’t heard a single complaint that a boy can’t play because he doesn’t have boots, a bat, or pads. All the associations and clubs are doing a good job. The BCCI is very benevolent, very liberally supporting all the state associations, and the associations are in turn helping the districts, who are helping the clubs. If there’s a good or amazing cricketer, there is no hurdle in his pathway.\"" },
@@ -229,6 +230,7 @@ export const CHAPTERS: Chapter[] = [
     id: "exclusion",
     num: "05",
     title: "Cricket’s Exclusion",
+    dark: true,
     blocks: [
       { kind: "p", text: "So far, we have talked about class. But in India’s context, it’s almost impossible to untangle it from caste and religion." },
       { kind: "p", text: "Minz is the only Adivasi cricketer to have ever played in the IPL, taking Adivasi representation in the league to be around 0.12% when they make up to 9% of India’s population. There have been claims of some cricketers belonging to the Dalit community playing for the Indian men’s team, but none accept it as their identity publicly, and even the reported ones make up a fraction of the total." },
@@ -266,7 +268,7 @@ export const CHAPTERS: Chapter[] = [
       { kind: "p", text: "Although not an audit of government schools per se, it paints a grim picture." },
       { kind: "p", text: "Financial heft impacts almost every aspect of cricket. Most of the Black Africans to have played for South Africa in men’s and women’s cricket have been bowlers, while Asians tend to be spinners. Batting has been almost exclusively reserved for white." },
       { kind: "p", text: "Coaches in India have also observed that those from financially weaker families tend to lean towards bowling over batting. Siddiqui says his students from rural areas choose bowling because it only requires them to invest in shoes, and not the specialised batting gear." },
-      { kind: "screen", text: "“It’s not just in South Africa; look at why so many talented poor people adopt football,\" Rathore points out. “You buy one pair of studs, it lasts many days, and you play with just one ball. Wherever equipment becomes expensive for the talented and hardworking, that game moves further away. The best example: does everyone play golf? Does everyone play polo? To play polo, you need the capacity to keep a horse, space to keep it, and caretakers. The common public cannot play these games. But cricket — cricket humaare yahaan pe toh religion hai, cricket toh India mein puja jaata hai (Cricket shouldn’t be like this; it’s a religion here; it is worshipped in India!).\"" },
+      { kind: "screen", tone: "dark", text: "“It’s not just in South Africa; look at why so many talented poor people adopt football,\" Rathore points out. “You buy one pair of studs, it lasts many days, and you play with just one ball. Wherever equipment becomes expensive for the talented and hardworking, that game moves further away. The best example: does everyone play golf? Does everyone play polo? To play polo, you need the capacity to keep a horse, space to keep it, and caretakers. The common public cannot play these games. But cricket — cricket humaare yahaan pe toh religion hai, cricket toh India mein puja jaata hai (Cricket shouldn’t be like this; it’s a religion here; it is worshipped in India!).\"" },
       { kind: "interlude", variant: "comparison", label: "Seven to eight per cent of the people, seventy per cent of the wealth", notes: ["Historical estimates suggest that the white population of South Africa—making up roughly 7% to 8% of the population—owns a disproportionate 70% share of the country’s wealth. It’s one of the reasons why cricket in South Africa was for years dominated by white men."] },
       { kind: "p", text: "In South Africa, Dr. Dove’s research says that this relates to cricket centres being farther from poorer neighborhoods and parents with long working hours and little savings struggling to find time for dropping and picking up their children from academies, forcing them to sleep less. India is no different, and examples of parents taking early retirements to commit to the kid’s cricket are quite common." },
       { kind: "p", text: "In another example, Dr. Dove’s research found that family responsibilities don’t allow some cricketers the choice to play cricket freely. In India, Yashasvi wasn’t the only Jaiswal who left UP for Mumbai in 2012 — his brother, Tejasvi, also did, but shifted to Delhi in just over a year to work as a salesman because their family back home was struggling financially." },
@@ -304,13 +306,14 @@ export const CHAPTERS: Chapter[] = [
     id: "merit",
     num: "08",
     title: "Cricket’s Merit",
+    dark: true,
     blocks: [
       { kind: "p", text: "It all circles around to ‘merit’. While celebrating every success story, we make ourselves believe that sport is inherently meritorious, that if you are good, you’d be successful. The right yardstick, instead, is opportunity." },
       { kind: "p", text: "Just look at Sachin Tendulkar and Vinod Kambli. They are often cited as examples of merit — people remember their famous 1988 Harris Shield semi-final partnership and say both were equally talented, were almost at the same point in their lives, but one ended up becoming the greatest of all time and the other, labelled an alcoholic, is still struggling." },
       { kind: "scene", ref: "divergence", label: "The same start, two homes", steps: DIVERGENCE_STEPS },
       { kind: "p", text: "But being at the same place at one point in life doesn’t mean that both had the same start. While Tendulkar was born to a poet-professor father and a government employee mother, Kambli’s story is hidden in the fifth paragraph of this article, in Vikas’ name, beginning with an abusive father, a mechanic, and a loving mother who died when he was 20." },
       { kind: "p", text: "While he and Tendulkar were both equally supported by Ramakant Archrekar, Kambli used to travel from and back to a confrontational room of 17 others. Dr. Dove’s research found that parents’ emotional support was crucial for talented cricketers, and only one of Tendulkar and Kambli had that, despite their arguably similar skill sets." },
-      { kind: "p", text: "So, it begs the question: even if BCCI selectors and IPL owners don’t look at anything but performance, do all the players in the pool of selection have had the same opportunity?" },
+      { kind: "screen", tone: "dark", text: "So, it begs the question: even if BCCI selectors and IPL owners don’t look at anything but performance, do all the players in the pool of selection have had the same opportunity?" },
       { kind: "p", text: "The poorer you are, the more likely you are to grow up in a dysfunctional home, to either not study at all or study in a government school without a PT teacher, to live in a village with no cricket facilities, to not have the right diet to avoid injuries in the future, and to not be able to show your talent to a coach who can teach you and might help you with expensive gear." },
       { kind: "p", text: "There’s nothing in a name, just like age is just a number in sports. But your name depends on where you come from — your state, district, village, and caste — and so does the time you have to become a cricketer in India." },
       { kind: "p", text: "Three of the five cricketers mentioned in the introduction belong to the same academy, which has produced one IPL star and, in credit to its coaches, half a dozen state-level players. But over a hundred, rich and poor, are still toiling hard for the same reward, with similar dedication." },
@@ -325,6 +328,8 @@ export interface Chapter {
   num: string;
   /** The article's own section heading, verbatim. Empty where it has none. */
   title: string;
+  /** Presentation only: a dark ground for the chapter's heaviest passages. */
+  dark?: boolean;
   blocks: Block[];
 }
 

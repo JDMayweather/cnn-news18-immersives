@@ -19,6 +19,42 @@ section.rm-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
 .rm-chapter#exclusion { background: linear-gradient(180deg, ${c.moss}, ${c.paperAlt}); }
 .rm-chapter#merit { background: linear-gradient(180deg, ${c.paperAlt}, ${c.paper}); }
 
+/* ---------- dark ground: the heaviest chapter ----------
+   Doubled classes outrank the alternating grounds above. Light figures,
+   panels and interludes sit on it unchanged and pop; running type, labels,
+   quotes and captions switch to on-dark tokens. */
+.rm-chapter.rm-chapter--dark,
+.rm-chapter.rm-chapter--dark#exclusion,
+.rm-chapter.rm-chapter--dark#merit {
+  /* Feathered into the neighbouring light grounds: transparent at both
+     edges over the paper base, full dark through the middle. */
+  background: linear-gradient(180deg, rgba(242, 245, 230, 0) 0, #0e160b 2.5rem, #0a1108 50%, #0e160b calc(100% - 2.5rem), rgba(242, 245, 230, 0) 100%);
+}
+.rm-chapter.rm-chapter--dark::before { opacity: 0.16; }
+.rm-chapter.rm-chapter--dark .rm-open-num { color: ${c.onDarkAccent}; opacity: 0.9; }
+.rm-chapter.rm-chapter--dark .rm-open-rule { background: linear-gradient(90deg, ${c.onDarkLine}, rgba(0, 0, 0, 0)); }
+.rm-chapter.rm-chapter--dark .rm-h2 { color: ${c.onDark}; }
+.rm-chapter.rm-chapter--dark .rm-h3 { color: ${c.onDarkAccent}; border-top-color: ${c.onDarkLine}; }
+.rm-chapter.rm-chapter--dark .rm-h3::before { color: ${c.onDarkAccent}; }
+.rm-chapter.rm-chapter--dark .rm-standfirst { color: ${c.onDarkDim}; }
+.rm-chapter.rm-chapter--dark .rm-prose > p { color: ${c.onDarkDim}; }
+.rm-chapter.rm-chapter--dark .rm-prose > p strong { color: ${c.onDark}; }
+.rm-chapter.rm-chapter--dark .rm-prose a { color: ${c.onDarkAccent}; }
+.rm-chapter.rm-chapter--dark .rm-quote p { color: ${c.claySoft}; }
+.rm-chapter.rm-chapter--dark .rm-quote footer, .rm-chapter.rm-chapter--dark .rm-quote-role { color: ${c.onDarkFaint}; }
+.rm-chapter.rm-chapter--dark .rm-quote::before { opacity: 0.3; }
+.rm-chapter.rm-chapter--dark .rm-fig-label { color: ${c.onDarkAccent}; }
+.rm-chapter.rm-chapter--dark .rm-fig-label::after { background: ${c.onDarkLine}; }
+.rm-chapter.rm-chapter--dark .rm-fig-cap { color: ${c.onDarkFaint}; }
+.rm-chapter.rm-chapter--dark .rm-float-line { color: ${c.onDark}; }
+.rm-chapter.rm-chapter--dark .rm-float-credit { color: ${c.onDarkFaint}; }
+.rm-chapter.rm-chapter--dark .rm-note { background: rgba(244, 246, 234, 0.08); color: ${c.onDarkDim}; }
+.rm-chapter.rm-chapter--dark .rm-step-v { color: ${c.onDark}; }
+.rm-chapter.rm-chapter--dark .rm-step-k { color: ${c.onDarkAccent}; }
+.rm-chapter.rm-chapter--dark .rm-step-rail { background: ${c.onDarkLine}; }
+.rm-chapter.rm-chapter--dark .rm-scene-count { color: ${c.onDarkFaint}; }
+.rm-chapter.rm-chapter--dark .rm-rule > i { background: linear-gradient(90deg, ${c.leafMid}, rgba(0, 0, 0, 0)); }
+
 /* ---------- soft reveals ---------- */
 .rm-rise { opacity: 0; transform: translateY(16px); }
 .rm-rise.is-in { opacity: 1; transform: none; transition: opacity 1s ${motion.soft}, transform 1.1s ${motion.ease}; }
@@ -310,8 +346,8 @@ section.rm-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
 .closing-sources a:hover { color: ${c.green}; }
 .closing-sources a:focus-visible { outline: 2px solid ${c.green}; outline-offset: 2px; }
 .closing-fine { font-family: ${f.sans}; font-size: 0.78rem; line-height: 1.7; color: ${c.textFaint}; margin: 1.2rem 0 0; }
-.closing-sign { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 2rem; margin-top: clamp(2.5rem, 6vh, 4rem); padding-top: 1.2rem; border-top: 1px solid ${c.line}; }
-.closing-sign p { font-family: ${f.sans}; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.08em; color: ${c.textFaint}; margin: 0; }
+.closing-sign { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 2rem; margin: clamp(2.5rem, 6vh, 4rem) calc(50% - 50vw) 0; padding: 2.2rem var(--rm-gutter) 1.6rem; border-top: 0; background: linear-gradient(180deg, rgba(19, 29, 14, 0), #131d0e 12%, #0d150a); }
+.closing-sign p { font-family: ${f.sans}; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.08em; color: ${c.onDarkFaint}; margin: 0; }
 @media (max-width: 860px) { .closing-grid { grid-template-columns: 1fr; } }
 
 /* Every reading column sits above the section ground, so nothing overlaps. */
@@ -469,6 +505,14 @@ section.rm-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
   text-wrap: balance;
 }
 .rm-prose > blockquote.rm-quote--screen > footer { max-width: none; margin: 1.2rem auto 0; text-align: center; }
+/* The dark pivot: the merit question lands on near-black, the only dark
+   ground outside the hero. On-dark tokens carry it. */
+.rm-prose > blockquote.rm-quote--screen-dark {
+  background: linear-gradient(180deg, rgba(13, 21, 10, 0) 0, #0d150a 4%, #182511 55%, #0d150a 96%, rgba(13, 21, 10, 0) 100%);
+  border-top: 0;
+  border-bottom: 0;
+}
+.rm-prose > blockquote.rm-quote--screen-dark > p { color: ${c.onDark}; }
 
 /* ---------- embed ---------- */
 .embed .hero { min-height: auto; padding-block: 3.5rem 5rem; }

@@ -74,7 +74,7 @@ function BlockView({ block, dropCap }: { block: Block; dropCap?: boolean }): Rea
       /* A paragraph the article asks in its own voice, set at screen scale —
          and revealed line by line, so the long sentence lands in beats. */
       return (
-        <blockquote className="rm-quote rm-quote--screen">
+        <blockquote className={`rm-quote rm-quote--screen${block.tone === "dark" ? " rm-quote--screen-dark" : ""}`}>
           <p>
             <DisplayText text={block.text} />
           </p>
@@ -185,7 +185,7 @@ export default function Chapter({ chapter, index }: { chapter: ChapterData; inde
   const alt = index % 2 === 1;
 
   return (
-    <section className={`rm-chapter${alt ? " rm-chapter--alt" : ""}`} id={chapter.id} data-num={chapter.num}>
+    <section className={`rm-chapter${alt ? " rm-chapter--alt" : ""}${chapter.dark ? " rm-chapter--dark" : ""}`} id={chapter.id} data-num={chapter.num}>
       {/* data-chapter lives on the inner wrap, not the section: the shared
           stylesheet styles section[data-chapter] with its own padding. */}
       <div className="rm-wrap" data-chapter={chapter.title}>
