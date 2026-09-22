@@ -3,10 +3,12 @@ import Hero from "./components/Hero";
 import { refreshOnFonts, useRiseObserver } from "./components/motion";
 import Chapter from "./components/Chapter";
 import Closing from "./components/Closing";
+import Atmosphere from "./components/Atmosphere";
+import AmbientAudio from "./components/AmbientAudio";
 import ProgressIndicator from "@/components/ProgressIndicator";
 import MoreImmersives from "@/components/MoreImmersives";
 import { sendResizeMessage } from "@/core/messaging/iframe";
-import { isEmbedMode } from "@/core/responsive/viewport";
+import { isEmbedMode, prefersReducedMotion } from "@/core/responsive/viewport";
 import { CHAPTERS } from "./assets/article";
 import { globalCss } from "./theme";
 import { componentCss } from "./components/styles";
@@ -68,15 +70,55 @@ function useEmbedResize(): void {
   (window as unknown as { __immersiveCleanup?: () => void }).__immersiveCleanup = cleanup;
 }
 
+/* The full-screen statements lean a little toward the cursor — a slow, small
+   parallax that gives the pivots life without moving the type off its axis.
+   Pointer-fine only, and never under reduced motion or in an embed. */
+function useQuoteTilt(): void {
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (isEmbedMode() || prefersReducedMotion()) return;
+    if (typeof matchMedia !== "function" || !matchMedia("(pointer: fine)").matches) return;
+
+    const quotes = Array.from(document.querySelectorAll<HTMLElement>(".rm-quote--screen"));
+    const cleanups: Array<() => void> = [];
+    for (const q of quotes) {
+      const p = q.querySelector<HTMLElement>("p");
+      if (!p) continue;
+      const move = (e: PointerEvent): void => {
+        const r = q.getBoundingClientRect();
+        const dx = (e.clientX - (r.left + r.width / 2)) / r.width;
+        const dy = (e.clientY - (r.top + r.height / 2)) / r.height;
+        p.style.setProperty("--qx", `${(dx * 12).toFixed(2)}px`);
+        p.style.setProperty("--qy", `${(dy * 7).toFixed(2)}px`);
+        p.style.setProperty("--qr", `${(dx * 1.1).toFixed(2)}deg`);
+      };
+      const leave = (): void => {
+        p.style.setProperty("--qx", "0px");
+        p.style.setProperty("--qy", "0px");
+        p.style.setProperty("--qr", "0deg");
+      };
+      q.addEventListener("pointermove", move);
+      q.addEventListener("pointerleave", leave);
+      cleanups.push(() => {
+        q.removeEventListener("pointermove", move);
+        q.removeEventListener("pointerleave", leave);
+      });
+    }
+    return () => cleanups.forEach((c) => c());
+  }, []);
+}
+
 export default function RichMansReligion(): React.JSX.Element {
   useDocumentTitle();
   useEmbedResize();
   useRiseObserver();
+  useQuoteTilt();
   useEffect(() => refreshOnFonts(), []);
 
   return (
     <main className="immersive rm">
       <style id="rm-styles">{globalCss + componentCss}</style>
+      <Atmosphere />
       <div className="rm-grain" aria-hidden="true" />
       <ProgressIndicator />
       <Hero />
@@ -84,6 +126,7 @@ export default function RichMansReligion(): React.JSX.Element {
         <Chapter key={chapter.id} chapter={chapter} index={i} />
       ))}
       <Closing />
+      <AmbientAudio />
       <MoreImmersives currentSlug="rich-mans-religion" />
     </main>
   );

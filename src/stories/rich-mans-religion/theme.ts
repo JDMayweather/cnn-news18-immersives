@@ -78,7 +78,7 @@ export const theme = {
    * curve, so the hierarchy is preserved rather than inverted.
    */
   type: {
-    heroTitle: "clamp(3.4rem, 9vw, 7.6rem)",
+    heroTitle: "clamp(4.2rem, 11.5vw, 10rem)",
     chapterTitle: "clamp(2rem, 5vw, 3.9rem)",
     subhead: "clamp(1.3rem, 2.4vw, 2rem)",
     standfirst: "clamp(1.08rem, 1.8vw, 1.62rem)",
@@ -86,8 +86,8 @@ export const theme = {
     lead: "clamp(1.25rem, 2vw, 1.9rem)",
     quote: "clamp(1.35rem, 2.6vw, 2.4rem)",
     numeral: "clamp(2.4rem, 6vw, 4.8rem)",
-    label: "0.76rem",
-    caption: "0.84rem",
+    label: "0.95rem",
+    caption: "1rem",
   },
 
   space: {
@@ -126,7 +126,14 @@ export const globalCss = `
   font-family: ${theme.fonts.serif};
   font-size: 100%;
   -webkit-font-smoothing: antialiased;
+  /* Engage Fraunces/Newsreader optical sizing and proper glyph shaping. */
+  font-optical-sizing: auto;
+  text-rendering: optimizeLegibility;
   overflow-x: clip;
+}
+/* Display faces get their ligatures and contextual alternates. */
+.rm-hero-title, .rm-h2, .rm-open-num, .rm-prose > p.rm-lead, .rm-quote p, .rm-prose > p.rm-solo {
+  font-feature-settings: "liga" 1, "dlig" 1, "calt" 1;
 }
 .rm ::selection { background: ${theme.colors.leafSoft}; color: ${theme.colors.greenInk}; }
 
@@ -149,6 +156,10 @@ export const globalCss = `
 }
 .rm-h2 {
   font-family: ${theme.fonts.display};
+  /* One title face across the whole story: the italic Fraunces used for
+     "The Cost" (02). Titles used to alternate roman/italic by chapter, which
+     read as two different fonts down the page. */
+  font-style: italic;
   font-weight: 400;
   font-size: ${theme.type.chapterTitle};
   line-height: 1.02;
@@ -158,9 +169,6 @@ export const globalCss = `
   text-wrap: balance;
 }
 .rm-h2 em { font-style: italic; color: ${theme.colors.green}; }
-/* Alternate chapters stay full-width like every other chapter: the ground
-   alternates, the measure never does, so no paragraph reads indented. */
-.rm-chapter--alt .rm-h2 { font-style: italic; }
 .rm-chapter { counter-reset: rmh3; }
 .rm-h3 {
   counter-increment: rmh3;
@@ -245,14 +253,19 @@ export const globalCss = `
 /* A paragraph too short to hold the cap (one line) has none: the letter would
    stand beside a single line and push the rest of the page down. */
 .rm-prose > p.rm-nocap::first-letter { font-size: inherit; float: none; color: inherit; padding: 0; }
-.rm-prose a, .rm-callout a { color: ${theme.colors.greenDeep}; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; text-decoration-color: ${theme.colors.leafMid}; }
+.rm-prose a, .rm-callout a { color: ${theme.colors.greenDeep}; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; text-decoration-color: ${theme.colors.leafMid}; transition: text-decoration-color 0.3s ${theme.motion.ease}, text-underline-offset 0.3s ${theme.motion.ease}; }
+.rm-prose a:hover, .rm-callout a:hover { text-decoration-color: ${theme.colors.green}; text-underline-offset: 5px; }
 .rm-prose > p em, .rm-prose li em { font-style: italic; }
 .rm-prose > p strong { font-weight: 600; color: ${theme.colors.ink}; }
 
 /* ---------- pull quote: the human voice, in clay ---------- */
-.rm-quote { position: relative; margin: clamp(1.8rem, 4.4vh, 2.9rem) 0; padding: 0; border-left: 0; }
-/* A cut mark behind the words: punctuation, not copy. One glyph, oversized,
-   in washed green, so every voice on the page opens under the same sign. */
+/* More room on top (the opening mark hangs above the first line and needs air
+   above it); a little less below, trimmed further by the closing mark. */
+.rm-quote { position: relative; margin: clamp(4rem, 8.5vh, 5.8rem) 0 clamp(1rem, 2.4vh, 1.6rem); padding: 0; border-left: 0; }
+/* Cut marks around the words: punctuation, not copy. Two glyphs, oversized,
+   in green, so every voice on the page opens and closes under the same sign.
+   The opening mark hangs above the first line; the closing mark is set as its
+   own block directly under the last line of the quotation. */
 .rm-quote::before {
   content: "\\201C";
   position: absolute;
@@ -260,11 +273,30 @@ export const globalCss = `
   top: -0.42em;
   font-family: ${theme.fonts.serif};
   font-weight: 300;
-  font-size: clamp(4rem, 7vw, 6.5rem);
+  font-size: clamp(3rem, 7vw, 6.5rem);
   line-height: 1;
   color: ${theme.colors.green};
-  opacity: 0.16;
+  opacity: 0.85;
   pointer-events: none;
+  user-select: none;
+}
+.rm-quote p::after {
+  content: "\\201D";
+  display: block;
+  /* Closing mark at the right end of the quote, dropped a little below the
+     last line so it reads as the mirror of the opening mark. */
+  text-align: right;
+  font-family: ${theme.fonts.serif};
+  font-weight: 300;
+  font-size: clamp(3rem, 7vw, 6.5rem);
+  line-height: 0.3;
+  margin-top: 0.32em;
+  /* Pull the following content up into the glyph's empty lower box so the
+     closing mark does not leave a large gap after the quote. */
+  margin-bottom: -0.42em;
+  text-indent: 0;
+  color: ${theme.colors.green};
+  opacity: 0.85;
   user-select: none;
 }
 /* Hanging punctuation. Every quotation on the page opens with a mark, and a
@@ -281,8 +313,13 @@ export const globalCss = `
   letter-spacing: -0.008em;
   color: ${theme.colors.clay};
   margin: 0;
-  text-wrap: balance;
+  /* No balance: the quote fills the full column measure rather than being
+     squeezed into short, even lines with empty space on the right. */
+  text-wrap: pretty;
   text-indent: -0.424em;
+  /* Text shifted inward from the left. The opening mark sits on the blockquote
+     (left: -0.08em) and is unaffected — only the copy moves in. */
+  padding-left: clamp(1.3rem, 3vw, 2.6rem);
 }
 .rm-quote footer {
   margin-top: 1.1rem;
@@ -342,7 +379,7 @@ export const globalCss = `
   margin: 0 0 1rem;
 }
 .rm-fig-label::after { content: ""; height: 1px; background: ${theme.colors.lineSoft}; flex: 1; }
-.rm-fig-cap { font-family: ${theme.fonts.sans}; font-size: ${theme.type.caption}; line-height: 1.62; color: ${theme.colors.textFaint}; margin: 0.9rem 0 0; }
+.rm-fig-cap { font-family: ${theme.fonts.sans}; font-size: ${theme.type.caption}; line-height: 1.62; color: ${theme.colors.textDim}; margin: 0.9rem 0 0; }
 .rm-note {
   font-family: ${theme.fonts.sans};
   font-size: 0.88rem;
@@ -362,14 +399,22 @@ export const globalCss = `
 .progress-track { height: 3px; background: ${theme.colors.lineSoft}; }
 .progress-bar { height: 100%; background: ${theme.colors.leaf}; transform-origin: left; will-change: transform; }
 .progress-label {
-  position: absolute; top: 0.9rem; left: var(--rm-gutter);
-  font-family: ${theme.fonts.sans}; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.14em;
-  color: ${theme.colors.textFaint};
+  position: absolute; top: 0.75rem; left: var(--rm-gutter);
+  font-family: ${theme.fonts.sans}; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.14em;
+  color: ${theme.colors.greenInk};
+  /* A frosted pill so the chapter name stays legible over any ground it
+     floats above — photographs, dark chapters or paper alike. */
+  padding: 0.42rem 0.8rem;
+  background: rgba(242, 245, 230, 0.5);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
+  backdrop-filter: blur(12px) saturate(1.2);
+  border: 1px solid rgba(31, 41, 23, 0.08);
+  border-radius: ${theme.radius.pill};
 }.embed .progress-wrap { display: none; }
 
 /* Justification needs a long measure to keep word spaces even. On a phone the
    column is about 40 characters, so it drops back to ranged-left. */
 @media (max-width: 640px) {
-  .rm-prose > p, .rm-callout p { text-align: left; }
+  .rm-prose > p, .rm-callout p, .closing-body { text-align: left; }
 }
 `;

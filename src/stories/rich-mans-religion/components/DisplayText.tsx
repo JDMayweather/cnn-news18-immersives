@@ -101,8 +101,13 @@ export default function DisplayText({
     <span ref={ref} className={className} data-shown={shown ? "on" : undefined}>
       {lines
         ? lines.map((line, i) => (
-            <span key={i} className="rm-dline" aria-hidden={i > 0}>
-              <span style={{ "--i": Math.min(i, 8) } as React.CSSProperties}>{line}</span>
+            /* Each visual line is its own block for the staggered reveal, but
+               all of them stay in the accessibility tree — hiding lines after
+               the first truncated the title/quote for screen readers. A single
+               trailing space keeps the concatenated lines from running words
+               together when read aloud. */
+            <span key={i} className="rm-dline">
+              <span style={{ "--i": Math.min(i, 8) } as React.CSSProperties}>{i > 0 ? ` ${line}` : line}</span>
             </span>
           ))
         : text}

@@ -225,91 +225,63 @@ export function KitAssembly({ active }: { active: number }): React.JSX.Element {
   );
 }
 
-/* --------------------------------------------------------------- field --- */
-
-const FIELD_COLS = 20;
-const FIELD_ROWS = 10;
+/* ---------------------------------------------------------- dial gauge --- */
 
 /**
- * Which dots light, and the figure that lights them, per step.
- *
- * The count is exact, not decorative. An earlier pass printed "0.12%" beside
- * one lit dot of two hundred (0.5%) and "less than 5%" beside ten (exactly
- * 5%) — the drawing contradicted the number it was illustrating. Each step now
- * lights the number of dots its own value means, and prints that count in the
- * line below, so the arithmetic can be checked against the picture.
+ * The exclusion, read four ways -- but each figure has its own denominator, so
+ * a single field of two hundred "children" was the wrong container: the dots
+ * meant a different population every step. Instead one dial sweeps to each
+ * step's share, and the read-out names what that share is *of*. The ring is the
+ * whole (100%); the arc is the part; the number and its denominator are printed
+ * plainly beside it, so nothing is left for the reader to decode.
  */
-const FIELD_STEPS = [
-  { lit: 1, value: "One", note: "the only Adivasi cricketer to have ever played in the IPL" },
-  {
-    lit: 167,
-    value: "Five out of six",
-    note: "five out of six multidimensionally poor people in India live in households whose head is from a Scheduled Tribe (ST), a Scheduled Caste (SC), or Other Backward Class (OBC)",
-  },
-  {
-    lit: 68,
-    value: "34%",
-    note: "around 34% of the primary schools in rural India didn\u2019t have a playground",
-  },
-  {
-    lit: 8,
-    value: "Under 5%",
-    note: "less than 5% of primary schools had a separate Physical Education teacher",
-  },
+const DIAL_STEPS = [
+  { pct: 0.12, value: "0.12%", sub: "Adivasi share of IPL players — they are 9% of India" },
+  { pct: 83, value: "5 in 6", sub: "of India’s poorest are from ST, SC or OBC households" },
+  { pct: 34, value: "34%", sub: "of rural primary schools have no playground" },
+  { pct: 4, value: "under 5%", sub: "of primary schools have a PE teacher" },
 ];
 
-const FIELD_DOTS = Array.from({ length: FIELD_COLS * FIELD_ROWS }, (_, i) => {
-  const col = i % FIELD_COLS;
-  const row = Math.floor(i / FIELD_COLS);
-  return {
-    cx: 40 + col * 43.2 + 10,
-    cy: 52 + row * 44,
-  };
-});
+const DIAL_R = 150;
+const DIAL_CIRC = 2 * Math.PI * DIAL_R;
 
 /**
- * Two hundred children, one dot each, lit four ways. Each step lights the
- * dots that stand for one percentage from the article, and says which it is.
+ * One dial, four readings. The arc length is the step's percentage of the whole
+ * ring, so 0.12% is a bare nub and five-in-six is most of the circle -- the
+ * contrast across steps is the point. Value and denominator are HTML, never SVG
+ * text, so they stay sharp at any size.
  */
 export function ExclusionsField({ active }: { active: number }): React.JSX.Element {
-  const step = FIELD_STEPS[Math.min(active, FIELD_STEPS.length - 1)];
-  const lit = Math.min(step.lit, FIELD_DOTS.length);
+  const step = DIAL_STEPS[Math.min(active, DIAL_STEPS.length - 1)];
+  const offset = DIAL_CIRC * (1 - Math.min(step.pct, 100) / 100);
 
   return (
     <div className="twohundred">
       <svg
-        className="twohundred-svg"
-        viewBox="0 0 900 500"
+        className="twohundred-svg twohundred-dial"
+        viewBox="0 0 900 400"
         role="img"
-        aria-label={`Two hundred children. ${step.value}: ${lit} of them.`}
+        aria-label={`${step.value}: ${step.sub}`}
       >
-        <defs>
-          <linearGradient id="th-turf" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#f7faf4" />
-            <stop offset="100%" stopColor={C.moss} />
-          </linearGradient>
-        </defs>
-        <rect width="900" height="500" rx="26" fill="url(#th-turf)" />
-        {FIELD_DOTS.map((d, i) => {
-          /* An even spread of exactly `lit` dots rather than the first `lit`
-             in reading order: a share of a crowd should look like a share of
-             it, not like a filled block in the corner. */
-          const on = (i * lit) % FIELD_DOTS.length < lit;
-          return on ? (
-            <circle key={i} cx={d.cx} cy={d.cy} r={9} fill={C.green} opacity={0.95} />
-          ) : (
-            <circle key={i} cx={d.cx} cy={d.cy} r={9} fill="none" stroke={C.leafMid} strokeWidth={1.4} opacity={0.5} />
-          );
-        })}
+        <circle cx={450} cy={200} r={DIAL_R} fill="none" stroke={C.moss} strokeWidth={36} />
+        <circle
+          className="th-arc"
+          cx={450}
+          cy={200}
+          r={DIAL_R}
+          fill="none"
+          stroke={C.green}
+          strokeWidth={36}
+          strokeLinecap="round"
+          strokeDasharray={DIAL_CIRC}
+          strokeDashoffset={offset}
+          transform="rotate(-90 450 200)"
+        />
       </svg>
 
       <div className="twohundred-read">
         <span className="twohundred-value">{step.value}</span>
-        <span className="twohundred-note">
-          {step.note}
-          {/* How the drawing encodes the percentage, said plainly. */}
-          <em>{lit} of 200 dots filled</em>
-        </span>
+        <span className="twohundred-note">{step.sub}</span>
       </div>
     </div>
   );

@@ -26,7 +26,7 @@ const COVERS: Record<string, Cover> = {
   },
   "rich-mans-religion": {
     kind: "video",
-    src: "/dhoni_six.mp4",
+    src: "/kids_gully_cricket.mp4",
     posterImg: "/cricket-poster.jpg",
     alt: "Cricketer hitting a six",
   },

@@ -45,6 +45,16 @@ function Photo({
  * run flows around it, with Prose narrowing only the lines beside the float.
  */
 
+/**
+ * Pull quotes carry the big green opening and closing marks as decoration, so
+ * the literal double quotation marks in the text are redundant. Strip every
+ * double quote (curly and straight); apostrophes and nested single quotes are
+ * left alone. Applied at render time only — the source text stays verbatim.
+ */
+function stripDoubleQuotes(text: string): string {
+  return text.replace(/[“”‟″"]/g, "").replace(/\s{2,}/g, " ").trim();
+}
+
 function BlockView({ block, dropCap }: { block: Block; dropCap?: boolean }): React.JSX.Element | null {
   switch (block.kind) {
     case "lead":
@@ -59,7 +69,7 @@ function BlockView({ block, dropCap }: { block: Block; dropCap?: boolean }): Rea
         .join(" ");
       return (
         <blockquote className={cls}>
-          <p>{block.text}</p>
+          <p>{stripDoubleQuotes(block.text)}</p>
           {/* No cite means the article asked the question in its own voice. */}
           {block.cite ? (
             <footer>
@@ -165,6 +175,25 @@ function BlockView({ block, dropCap }: { block: Block; dropCap?: boolean }): Rea
           <Photo block={block} className="rm-shot" />
           <figcaption className="rm-fig-cap">{block.caption}</figcaption>
         </figure>
+      );
+    case "duo":
+      /* Two frames to one thought: a short-cropped pair, each tagged and
+         credited, that sits in the column rather than bleeding the viewport. */
+      return (
+        <div className="rm-fig rm-duo-fig">
+          {block.label ? <p className="rm-fig-label">{block.label}</p> : null}
+          <div className="rm-duo">
+            {block.items.map((it) => (
+              <figure className="rm-duo-item" key={it.src}>
+                <img className="rm-duo-img" src={it.src} alt={it.alt} loading="lazy" decoding="async" />
+                <figcaption className="rm-duo-cap">
+                  <span className="rm-duo-tag">{it.tag}</span>
+                  <span className="rm-duo-credit">{it.credit}</span>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
       );
     case "note":
       return <p className="rm-note">{block.text}</p>;

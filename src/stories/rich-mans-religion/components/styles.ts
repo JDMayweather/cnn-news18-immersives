@@ -42,7 +42,10 @@ section.rm-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
 .rm-chapter.rm-chapter--dark .rm-prose a { color: ${c.onDarkAccent}; }
 .rm-chapter.rm-chapter--dark .rm-quote p { color: ${c.claySoft}; }
 .rm-chapter.rm-chapter--dark .rm-quote footer, .rm-chapter.rm-chapter--dark .rm-quote-role { color: ${c.onDarkFaint}; }
-.rm-chapter.rm-chapter--dark .rm-quote::before { opacity: 0.3; }
+/* On the dark ground the washed green mark all but vanishes; the on-dark
+   accent keeps the opening and closing marks highly visible over near-black. */
+.rm-chapter.rm-chapter--dark .rm-quote::before,
+.rm-chapter.rm-chapter--dark .rm-quote p::after { color: ${c.onDarkAccent}; opacity: 0.9; }
 .rm-chapter.rm-chapter--dark .rm-fig-label { color: ${c.onDarkAccent}; }
 .rm-chapter.rm-chapter--dark .rm-fig-label::after { background: ${c.onDarkLine}; }
 .rm-chapter.rm-chapter--dark .rm-fig-cap { color: ${c.onDarkFaint}; }
@@ -140,10 +143,10 @@ section.rm-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
 /* A printed proportion: the value is the record, the bar is the feel of it. */
 .il-bars { list-style: none; margin: 0; padding: clamp(1.1rem, 2.6vw, 1.7rem) clamp(1.2rem, 2.6vw, 1.9rem) 0.4rem; display: grid; gap: 0.85rem; background: linear-gradient(180deg, rgba(251, 252, 244, 0.1), rgba(251, 252, 244, 0.55)); }
 .il-bar { display: grid; grid-template-columns: minmax(0, 1fr) minmax(6rem, 14rem) minmax(4.5rem, auto); align-items: center; gap: 1rem; }
-.il-bar-label { font-family: ${f.sans}; font-size: 0.86rem; line-height: 1.5; color: ${c.textBody}; }
-.il-bar-track { position: relative; height: 0.62rem; border-radius: 999px; background: rgba(31, 41, 23, 0.08); overflow: hidden; }
+.il-bar-label { font-family: ${f.sans}; font-size: 0.94rem; line-height: 1.5; color: ${c.textBody}; }
+.il-bar-track { position: relative; height: 0.85rem; border-radius: 999px; background: rgba(31, 41, 23, 0.08); overflow: hidden; }
 .il-bar-fill { position: absolute; inset: 0 auto 0 0; border-radius: 999px; background: linear-gradient(90deg, ${c.leaf}, ${c.green}); }
-.il-bar-value { font-family: ${f.serif}; font-weight: 500; font-size: 1.05rem; letter-spacing: -0.01em; color: ${c.greenInk}; text-align: right; font-variant-numeric: tabular-nums; }
+.il-bar-value { font-family: ${f.serif}; font-weight: 600; font-size: 1.2rem; letter-spacing: -0.01em; color: ${c.greenInk}; text-align: right; font-variant-numeric: tabular-nums; }
 @media (max-width: 720px) {
   .il-bar { grid-template-columns: 1fr; gap: 0.3rem; }
   .il-bar-value { text-align: left; }
@@ -154,8 +157,8 @@ section.rm-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
 .rail { overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; padding-bottom: 0.6rem; }
 .rail:focus-visible { outline: 2px solid ${c.green}; outline-offset: 4px; }
 .rail-track { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(15rem, 19rem); gap: 0.9rem; width: max-content; padding: 0.2rem; }
-.slip { scroll-snap-align: start; padding: 1.4rem 1.5rem 1.6rem; background: ${c.paperPanel}; border-radius: var(--rm-r); box-shadow: ${sh.panel}; display: grid; align-content: start; gap: 0.5rem; }
-.slip-n { font-family: ${f.sans}; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.14em; color: ${c.green}; }
+.slip { scroll-snap-align: start; padding: 1.4rem 1.5rem 1.6rem; background: ${c.paperPanel}; border: 1px solid ${c.lineSoft}; border-radius: var(--rm-r); box-shadow: ${sh.panel}; display: grid; align-content: start; gap: 0.5rem; }
+.slip-n { font-family: ${f.sans}; font-size: 0.9rem; font-weight: 600; letter-spacing: 0.14em; color: ${c.green}; }
 .slip-name { font-family: ${f.serif}; font-weight: 500; font-size: 1.65rem; letter-spacing: -0.02em; color: ${c.greenInk}; margin: 0; }
 .slip-work { font-family: ${f.sans}; font-size: 0.8rem; line-height: 1.6; color: ${c.textDim}; margin: 0; }
 .slip-rule { width: 40px; height: 2px; display: block; }
@@ -172,13 +175,13 @@ section.rm-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
    has to be summarised to fit one. */
 .name-row--one { grid-template-columns: 2rem minmax(0, 1fr); align-items: baseline; }
 .name-v--solo { font-family: ${f.serif}; font-size: clamp(1.25rem, 3.2vw, 1.9rem); line-height: 1.25; letter-spacing: -0.01em; color: ${c.ink}; }
-.name-n { font-family: ${f.sans}; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; color: ${c.green}; }
+.name-n { font-family: ${f.sans}; font-size: 0.9rem; font-weight: 600; letter-spacing: 0.12em; color: ${c.green}; }
 
 /* ---------- cost ledger ---------- */
-.ledger { background: ${c.paperPanel}; border-radius: var(--rm-r); padding: clamp(1.3rem, 3vw, 2rem); box-shadow: ${sh.panel}; }
+.ledger { background: ${c.paperPanel}; border: 1px solid ${c.lineSoft}; border-radius: var(--rm-r); padding: clamp(1.3rem, 3vw, 2rem); box-shadow: ${sh.panel}; }
 .led-row { display: grid; grid-template-columns: minmax(0, 9.5rem) minmax(0, 1fr) 6.5rem; align-items: center; gap: 1rem; padding: 0.7rem 0; }
 .led-k { font-family: ${f.serif}; font-weight: 500; font-size: 1rem; margin: 0; color: ${c.greenInk}; }
-.led-bar { height: 9px; background: ${c.moss}; border-radius: ${r.pill}; overflow: hidden; }
+.led-bar { height: 12px; background: ${c.moss}; border-radius: ${r.pill}; overflow: hidden; }
 .led-bar > i { display: block; height: 100%; border-radius: ${r.pill}; background: linear-gradient(90deg, ${c.leafMid}, ${c.green}); }
 .led-v { font-family: ${f.sans}; font-size: 0.92rem; font-weight: 500; text-align: right; margin: 0; color: ${c.textDim}; }
 .led-total { display: grid; gap: 0.3rem; margin-top: 1.1rem; padding-top: 1.4rem; border-top: 1px solid ${c.line}; }
@@ -197,10 +200,10 @@ section.rm-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
 @media (max-width: 700px) { .ld-step { grid-template-columns: 1fr; gap: 0.4rem; } .ld-rail { display: none; } }
 
 /* ---------- price waterfall ---------- */
-.wf { background: ${c.paperPanel}; border-radius: var(--rm-r); padding: clamp(1.3rem, 3vw, 2rem); box-shadow: ${sh.panel}; }
+.wf { background: ${c.paperPanel}; border: 1px solid ${c.lineSoft}; border-radius: var(--rm-r); padding: clamp(1.3rem, 3vw, 2rem); box-shadow: ${sh.panel}; }
 .wf-row { display: grid; grid-template-columns: minmax(0, 11rem) minmax(0, 1fr) 6rem; gap: 0.3rem 1rem; align-items: center; padding: 0.6rem 0 0.15rem; }
 .wf-k { font-family: ${f.serif}; font-weight: 500; font-size: 1rem; margin: 0; color: ${c.greenInk}; }
-.wf-track { height: 16px; background: ${c.moss}; border-radius: ${r.pill}; overflow: hidden; }
+.wf-track { height: 18px; background: ${c.moss}; border-radius: ${r.pill}; overflow: hidden; }
 .wf-fill { display: block; height: 100%; border-radius: ${r.pill}; background: ${c.leafMid}; }
 .wf-fill--accent { background: linear-gradient(90deg, ${c.leaf}, ${c.green}); }
 .wf-v { font-family: ${f.sans}; font-size: 0.92rem; font-weight: 500; text-align: right; margin: 0; color: ${c.textDim}; }
@@ -218,7 +221,7 @@ section.rm-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
 }
 
 /* ---------- willow line chart ---------- */
-.bc { width: 100%; height: auto; display: block; background: ${c.paperPanel}; border-radius: var(--rm-r); padding: clamp(0.9rem, 2vw, 1.6rem); box-shadow: ${sh.panel}; box-sizing: border-box; }
+.bc { width: 100%; height: auto; display: block; background: ${c.paperPanel}; border: 1px solid ${c.lineSoft}; border-radius: var(--rm-r); padding: clamp(0.9rem, 2vw, 1.6rem); box-shadow: ${sh.panel}; box-sizing: border-box; }
 .bc-axis { font-family: ${f.sans}; font-size: 11px; font-weight: 500; fill: ${c.textFaint}; }
 .bc-legend { display: flex; flex-wrap: wrap; gap: 0.4rem 1.6rem; margin-top: 0.9rem; }
 .bc-key { font-family: ${f.sans}; font-size: 0.82rem; color: ${c.textDim}; }
@@ -230,9 +233,9 @@ section.rm-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
 .band-cell { padding: 1.4rem 1.4rem 1.6rem; border-radius: var(--rm-r); background: ${c.paperPanel}; box-shadow: ${sh.panel}; }
 .band-cell:nth-child(2n) { background: ${c.moss}; box-shadow: none; }
 .band-value { font-family: ${f.serif}; font-weight: 400; font-size: clamp(2rem, 3.4vw, 3.1rem); letter-spacing: -0.03em; line-height: 0.98; margin: 0 0 0.85rem; color: ${c.green}; }
-.band-meter { height: 6px; background: ${c.mossDeep}; border-radius: ${r.pill}; margin-bottom: 1rem; overflow: hidden; }
+.band-meter { height: 8px; background: ${c.mossDeep}; border-radius: ${r.pill}; margin-bottom: 1rem; overflow: hidden; }
 .band-meter > span { display: block; height: 100%; border-radius: ${r.pill}; }
-.band-label { font-family: ${f.sans}; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.06em; color: ${c.greenInk}; margin: 0 0 0.55rem; }
+.band-label { font-family: ${f.sans}; font-size: 0.94rem; font-weight: 600; letter-spacing: 0.06em; color: ${c.greenInk}; margin: 0 0 0.55rem; }
 .band-context { font-size: 1rem; line-height: 1.62; color: ${c.textBody}; margin: 0; }
 @media (max-width: 900px) { .band { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 520px) { .band { grid-template-columns: 1fr; } }
@@ -241,7 +244,7 @@ section.rm-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
 .facts { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.7rem; }
 .fact-row { display: grid; grid-template-columns: 2.6rem minmax(0, 13rem) minmax(0, 1fr); gap: 0.4rem 1rem; align-items: baseline; padding: 1.15rem 1.3rem; border-radius: var(--rm-r); background: ${c.paperPanel}; box-shadow: ${sh.panel}; }
 .fact-row:nth-child(even) { background: ${c.moss}; box-shadow: none; }
-.fact-n { font-family: ${f.sans}; font-size: 0.74rem; font-weight: 600; letter-spacing: 0.1em; color: ${c.leaf}; }
+.fact-n { font-family: ${f.sans}; font-size: 0.92rem; font-weight: 600; letter-spacing: 0.1em; color: ${c.leaf}; }
 .fact-k { font-family: ${f.serif}; font-weight: 500; font-size: 1.12rem; letter-spacing: -0.01em; margin: 0; color: ${c.greenInk}; }
 .fact-v { font-size: 1rem; line-height: 1.66; color: ${c.textBody}; margin: 0; }
 @media (max-width: 700px) { .fact-row { grid-template-columns: 1.8rem minmax(0, 1fr); } .fact-v { grid-column: 2; } }
@@ -262,14 +265,14 @@ section.rm-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
 @media (max-width: 620px) { .geo-list li { grid-template-columns: 1fr; } }
 
 /* ---------- merit ---------- */
-.merit { width: 100%; height: auto; display: block; background: ${c.paperPanel}; border-radius: var(--rm-r); padding: clamp(0.9rem, 2vw, 1.6rem); box-shadow: ${sh.panel}; box-sizing: border-box; }
+.merit { width: 100%; height: auto; display: block; background: ${c.paperPanel}; border: 1px solid ${c.lineSoft}; border-radius: var(--rm-r); padding: clamp(0.9rem, 2vw, 1.6rem); box-shadow: ${sh.panel}; box-sizing: border-box; }
 .mt-step { font-family: ${f.sans}; font-size: 11px; font-weight: 500; fill: ${c.textFaint}; }
 .mt-step--a { fill: ${c.green}; }
 .mt-step--b { fill: ${c.clay}; }
 .merit-pairs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.8rem; margin: 1.4rem 0 0; }
 .merit-pairs > div { padding: 1.1rem 1.2rem; border-radius: var(--rm-r); background: ${c.paperPanel}; box-shadow: ${sh.panel}; }
 .merit-pairs > div:nth-child(2) { background: ${c.claySoft}; box-shadow: none; }
-.merit-pairs dt { font-family: ${f.sans}; font-size: 0.74rem; font-weight: 600; letter-spacing: 0.08em; color: ${c.green}; margin-bottom: 0.5rem; }
+.merit-pairs dt { font-family: ${f.sans}; font-size: 0.92rem; font-weight: 600; letter-spacing: 0.08em; color: ${c.green}; margin-bottom: 0.5rem; }
 .merit-pairs dd { margin: 0; font-size: 1rem; line-height: 1.64; color: ${c.textBody}; }
 @media (max-width: 820px) { .merit-pairs { grid-template-columns: 1fr; } }
 
@@ -286,7 +289,7 @@ section.rm-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
   background: #0c1409;
   border-bottom: 1px solid ${c.lineSoft};
 }
-.hero-video { position: absolute; inset: 0; width: 100%; height: 100%; display: block; object-fit: cover; object-position: center 42%; z-index: 0; animation: rmKenBurns 22s ease-in-out infinite alternate; }
+.hero-video { position: absolute; inset: 0; width: 100%; height: 100%; display: block; object-fit: cover; object-position: center 42%; z-index: 0; animation: rmKenBurns 30s ease-in-out infinite alternate; }
 /* A slow push-in on the six: the frame breathes instead of sitting still. */
 @keyframes rmKenBurns { from { transform: scale(1); } to { transform: scale(1.09); } }
 /* Darkening overlay. The type reads against this, not against the frame, so
@@ -294,6 +297,7 @@ section.rm-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
 .hero-scrim {
   position: absolute; inset: 0; z-index: 1; pointer-events: none;
   background:
+    radial-gradient(120% 90% at 82% 12%, rgba(150, 89, 55, 0.16) 0%, rgba(150, 89, 55, 0) 55%),
     linear-gradient(180deg, rgba(10, 17, 7, 0.82) 0%, rgba(10, 17, 7, 0.4) 34%, rgba(10, 17, 7, 0.66) 72%, rgba(10, 17, 7, 0.92) 100%),
     radial-gradient(125% 85% at 16% 58%, rgba(10, 17, 7, 0.62) 0%, rgba(10, 17, 7, 0.18) 60%, rgba(10, 17, 7, 0) 100%);
 }
@@ -302,7 +306,7 @@ section.rm-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
 /* The mark keeps its own colours inside a light chip, so it stays legible on
    any frame without repainting the brand. */
 .hero-brand { height: 26px; width: auto; display: block; padding: 5px 9px; background: rgba(244, 246, 234, 0.95); border-radius: 6px; }
-.hero-eyebrow span { font-family: ${f.sans}; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.2em; color: ${c.onDarkAccent}; }
+.hero-eyebrow span { font-family: ${f.sans}; font-size: 0.92rem; font-weight: 600; letter-spacing: 0.2em; color: ${c.onDarkAccent}; }
 .rm-hero-title { font-family: ${f.display}; font-weight: 400; font-size: ${t.heroTitle}; line-height: 0.98; letter-spacing: -0.02em; margin: 0; color: ${c.onDark}; text-shadow: 0 2px 26px rgba(7, 14, 9, 0.55); }
 .h-mask { display: block; overflow: hidden; padding-bottom: 0.14em; margin-bottom: -0.08em; }
 .h-line { display: block; }
@@ -313,10 +317,13 @@ section.rm-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
 .hero-go:hover { background: ${c.leaf}; }
 .hero-go:active { transform: translateY(1px); }
 .hero-go:focus-visible { outline: 2px solid ${c.onDark}; outline-offset: 3px; }
-.hero-meta { font-family: ${f.sans}; font-size: 0.78rem; line-height: 1.7; color: ${c.onDarkFaint}; margin: 0; }
+.hero-meta { font-family: ${f.sans}; font-size: 0.86rem; line-height: 1.7; color: ${c.onDarkFaint}; margin: 0; }
+/* The byline carries the author: set larger and brighter than the date and
+   read-time beside it, on its own line above them. */
+.hero-byline { display: block; font-size: 1.15rem; font-weight: 600; letter-spacing: 0.01em; color: ${c.onDark}; margin-bottom: 0.15rem; }
 .hero-fig { margin: 0; }
 .hero-fig-card { color: ${c.onDarkDim}; background: rgba(10, 20, 13, 0.62); border: 1px solid ${c.onDarkLine}; border-radius: var(--rm-r); padding: 1.3rem 1.4rem 1.5rem; box-shadow: 0 20px 50px rgba(7, 14, 9, 0.45); backdrop-filter: blur(10px); }
-.hero-fig-cap { font-family: ${f.sans}; font-size: 0.74rem; font-weight: 600; letter-spacing: 0.1em; color: ${c.onDarkAccent}; margin: 0 0 0.9rem; }
+.hero-fig-cap { font-family: ${f.sans}; font-size: 0.9rem; font-weight: 600; letter-spacing: 0.1em; color: ${c.onDarkAccent}; margin: 0 0 0.9rem; }
 .hero-fig-big { font-family: ${f.display}; font-weight: 400; font-size: clamp(2.6rem, 4.5vw, 4rem); line-height: 1; letter-spacing: -0.02em; color: ${c.onDark}; margin: 0 0 1rem; font-variant-numeric: tabular-nums; }
 .hero-fig-big span { font-family: ${f.sans}; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.08em; color: ${c.onDarkFaint}; margin-left: 0.5rem; }
 .hero-dots { display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px; margin-bottom: 1.1rem; }
@@ -348,7 +355,8 @@ section.rm-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
 .closing-sources a:focus-visible { outline: 2px solid ${c.green}; outline-offset: 2px; }
 .closing-fine { font-family: ${f.sans}; font-size: 0.78rem; line-height: 1.7; color: ${c.textFaint}; margin: 1.2rem 0 0; }
 .closing-sign { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 2rem; margin: clamp(2.5rem, 6vh, 4rem) calc(50% - 50vw) 0; padding: 2.2rem var(--rm-gutter) 1.6rem; border-top: 0; background: linear-gradient(180deg, rgba(19, 29, 14, 0), #131d0e 12%, #0d150a); }
-.closing-sign p { font-family: ${f.sans}; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.08em; color: ${c.onDarkFaint}; margin: 0; }
+.closing-sign p { font-family: ${f.sans}; font-size: 0.92rem; font-weight: 500; letter-spacing: 0.08em; color: ${c.onDarkFaint}; margin: 0; }
+.closing-sign .closing-byline { font-size: 1.15rem; font-weight: 600; letter-spacing: 0.02em; color: ${c.onDark}; }
 @media (max-width: 860px) { .closing-grid { grid-template-columns: 1fr; } }
 
 /* Every reading column sits above the section ground, so nothing overlaps. */
@@ -380,7 +388,7 @@ section.rm-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
 .rm-scene { position: relative; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: clamp(1.6rem, 4vw, 3.6rem); align-items: start; }
 .rm-scene-stage { position: sticky; top: clamp(3.5rem, 9vh, 6rem); align-self: start; display: grid; gap: 0.9rem; }
 .rm-scene-visual { display: grid; place-items: center; min-height: min(64svh, 34rem); }
-.rm-scene-count { font-family: ${f.sans}; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.16em; color: ${c.textFaint}; margin: 0; text-align: center; font-variant-numeric: tabular-nums; }
+.rm-scene-count { font-family: ${f.sans}; font-size: 0.9rem; font-weight: 600; letter-spacing: 0.16em; color: ${c.textFaint}; margin: 0; text-align: center; font-variant-numeric: tabular-nums; }
 .rm-scene-steps { list-style: none; margin: 0; padding: 0; display: grid; }
 .rm-step { position: relative; min-height: 56svh; display: grid; align-content: center; gap: 0.5rem; padding-left: 1.9rem; opacity: 0.32; transition: opacity 0.55s ${motion.soft}; }
 .rm-step.is-past { opacity: 0.58; }
@@ -388,32 +396,37 @@ section.rm-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
 .rm-step-rail { position: absolute; left: 0; top: 12%; bottom: 12%; width: 1px; background: ${c.lineSoft}; }
 .rm-step-rail > i { position: absolute; left: -4px; top: 50%; width: 9px; height: 9px; border-radius: ${r.pill}; background: ${c.leafSoft}; transform: translateY(-50%); transition: background 0.45s ${motion.soft}, box-shadow 0.45s ${motion.soft}; }
 .rm-step.is-on .rm-step-rail > i { background: ${c.green}; box-shadow: 0 0 0 5px ${c.leafSoft}; }
-.rm-step-k { font-family: ${f.sans}; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.12em; color: ${c.green}; }
+.rm-step-k { font-family: ${f.sans}; font-size: 0.94rem; font-weight: 600; letter-spacing: 0.12em; color: ${c.green}; }
 .rm-step-v { font-family: ${f.serif}; font-weight: 300; font-size: clamp(1.15rem, 1.9vw, 1.5rem); line-height: 1.5; color: ${c.text}; margin: 0; max-width: 30ch; }
 
 /* ---------- kit assembly ---------- */
 .kit { display: grid; gap: 0.9rem; width: 100%; }
 .kit-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.6rem; }
+/* Three icon cells crush their labels on a phone; drop to two under 460px. */
+@media (max-width: 460px) { .kit-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .kit-cell { position: relative; display: grid; justify-items: center; gap: 0.25rem; padding: 0.85rem 0.5rem 0.8rem; border-radius: 16px; background: rgba(251, 252, 244, 0.5); opacity: 0.5; transition: opacity 0.6s ${motion.soft}, background 0.6s ${motion.soft}, transform 0.6s ${motion.ease}; }
 .kit-cell.is-on { opacity: 1; background: ${c.paperPanel}; box-shadow: ${sh.panel}; transform: translateY(-2px); }
 .kit-cell.is-intangible { border: 1px dashed ${c.leafMid}; }
 .kit-icon { width: clamp(38px, 4.2vw, 58px); height: auto; display: block; margin: 0; }
-.kit-name { font-family: ${f.sans}; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.03em; color: ${c.greenInk}; text-align: center; line-height: 1.25; }
+.kit-name { font-family: ${f.sans}; font-size: 0.86rem; font-weight: 600; letter-spacing: 0.03em; color: ${c.greenInk}; text-align: center; line-height: 1.25; }
 .kit-price { font-family: ${f.sans}; font-size: 0.74rem; font-weight: 600; color: ${c.textFaint}; font-variant-numeric: tabular-nums; }
 .kit-cell.is-on .kit-price { color: ${c.green}; }
 .kit-again { position: absolute; top: -7px; left: 50%; transform: translateX(-50%); font-family: ${f.sans}; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.06em; color: ${c.paper}; background: ${c.green}; padding: 0.16rem 0.42rem; border-radius: ${r.pill}; white-space: nowrap; animation: rmPop 0.5s ${motion.ease} both; }
 @keyframes rmPop { from { opacity: 0; transform: translateX(-50%) scale(0.75); } }
 .kit-total { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; padding: 0.85rem 1.1rem; border-radius: 16px; background: rgba(251, 252, 244, 0.75); }
-.kit-total-k { font-family: ${f.sans}; font-size: 0.76rem; font-weight: 600; letter-spacing: 0.12em; color: ${c.green}; }
+.kit-total-k { font-family: ${f.sans}; font-size: 0.94rem; font-weight: 600; letter-spacing: 0.12em; color: ${c.green}; }
 .kit-total-v { font-family: ${f.serif}; font-weight: 400; font-size: clamp(1.5rem, 2.8vw, 2.2rem); letter-spacing: -0.03em; color: ${c.greenInk}; font-variant-numeric: tabular-nums; }
 
 /* ---------- two hundred children ---------- */
 .twohundred { display: grid; gap: 0.9rem; width: 100%; }
 .twohundred-svg { display: block; width: 100%; height: auto; margin: 0; border-radius: 24px; box-shadow: ${sh.panel}; }
-.twohundred-read { display: grid; gap: 0.2rem; }
-.twohundred-value { font-family: ${f.serif}; font-weight: 300; font-size: clamp(2.2rem, 5vw, 3.6rem); line-height: 1; letter-spacing: -0.035em; color: ${c.green}; }
-.twohundred-note { font-family: ${f.sans}; font-size: 0.78rem; line-height: 1.6; color: ${c.textDim}; display: grid; }
-.twohundred-note em { font-style: normal; color: ${c.textFaint}; font-variant-numeric: tabular-nums; }
+/* The exclusion dial: capped so the ring never balloons on a wide column, and
+   the arc sweeps to each step's share as the reader scrolls between them. */
+.twohundred-dial { max-width: 30rem; margin-inline: auto; background: ${c.paperPanel}; border: 1px solid ${c.lineSoft}; padding: 0.6rem; box-sizing: border-box; }
+.th-arc { transition: stroke-dashoffset 0.75s ${motion.ease}; }
+.twohundred-read { display: grid; gap: 0.35rem; justify-items: center; text-align: center; }
+.twohundred-value { font-family: ${f.serif}; font-weight: 300; font-size: clamp(2.6rem, 6vw, 4.2rem); line-height: 1; letter-spacing: -0.035em; color: ${c.green}; font-variant-numeric: tabular-nums; }
+.twohundred-note { font-family: ${f.sans}; font-size: 0.98rem; line-height: 1.6; color: ${c.textDim}; max-width: 34ch; }
 
 /* ---------- divergence ---------- */
 .diverge { display: grid; gap: 1rem; width: 100%; }
@@ -428,7 +441,7 @@ section.rm-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
    own sentences; the visual only names its two ends, lighting each when its
    home arrives in the reading. */
 .dv-names { display: flex; flex-wrap: wrap; gap: 0.4rem 1.6rem; margin: 0.2rem 0 0; }
-.dv-names span { display: inline-flex; align-items: center; gap: 0.55rem; font-family: ${f.sans}; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.04em; color: ${c.greenInk}; opacity: 0.38; transition: opacity 0.45s ${motion.soft}; }
+.dv-names span { display: inline-flex; align-items: center; gap: 0.55rem; font-family: ${f.sans}; font-size: 0.94rem; font-weight: 600; letter-spacing: 0.04em; color: ${c.greenInk}; opacity: 0.38; transition: opacity 0.45s ${motion.soft}; }
 .dv-names span.is-on { opacity: 1; }
 .dv-swatch { width: 1.7rem; height: 0; border-top: 3px solid ${c.green}; border-radius: 2px; }
 .dv-swatch--b { border-top: 3px dashed ${c.clay}; }
@@ -449,7 +462,20 @@ section.rm-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
 .rm-panel img { display: block; width: 100%; height: auto; }
 .rm-panel-cap { display: grid; gap: 0.4rem; padding: 0.85rem var(--rm-gutter) 0; }
 .rm-panel-line { font-family: ${f.serif}; font-weight: 300; font-size: clamp(1.05rem, 1.7vw, 1.45rem); line-height: 1.42; color: ${c.textBody}; }
-.rm-panel-credit { font-family: ${f.sans}; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.06em; color: ${c.textFaint}; }
+.rm-panel-credit { font-family: ${f.sans}; font-size: 0.9rem; font-weight: 500; letter-spacing: 0.06em; color: ${c.textDim}; }
+
+/* ---------- a pair of photographs, one thought ----------
+   Two frames side by side, short-cropped so the pair stays compact instead of
+   two full-height panels stacked. Each is tagged (BCCI / IPL) and credited. */
+.rm-duo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(0.8rem, 2vw, 1.4rem); }
+.rm-duo-item { margin: 0; display: grid; gap: 0.55rem; }
+.rm-duo-img { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: var(--rm-r); background: ${c.moss}; box-shadow: ${sh.panel}; }
+.rm-duo-cap { display: grid; gap: 0.28rem; }
+.rm-duo-tag { font-family: ${f.sans}; font-size: 0.86rem; font-weight: 600; letter-spacing: 0.14em; color: ${c.green}; }
+.rm-duo-credit { font-family: ${f.sans}; font-size: 0.9rem; line-height: 1.5; color: ${c.textDim}; }
+.rm-chapter.rm-chapter--dark .rm-duo-tag { color: ${c.onDarkAccent}; }
+.rm-chapter.rm-chapter--dark .rm-duo-credit { color: ${c.onDarkFaint}; }
+@media (max-width: 560px) { .rm-duo { grid-template-columns: 1fr; } .rm-duo-img { aspect-ratio: 16 / 9; } }
 
 /* Portraits float and the copy wraps around them: Prose measures the float
    per line and narrows only the lines beside it, so the run keeps its full
@@ -460,7 +486,7 @@ section.rm-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
 .rm-float img { display: block; width: 100%; height: auto; border-radius: var(--rm-r-sm); background: ${c.moss}; box-shadow: ${sh.panel}; }
 .rm-float-cap { display: grid; gap: 0.35rem; margin-top: 0.65rem; }
 .rm-float-line { font-family: ${f.serif}; font-weight: 500; font-size: 1rem; line-height: 1.45; color: ${c.greenInk}; }
-.rm-float-credit { font-family: ${f.sans}; font-size: 0.71rem; line-height: 1.5; color: ${c.textFaint}; }
+.rm-float-credit { font-family: ${f.sans}; font-size: 0.9rem; line-height: 1.5; color: ${c.textDim}; }
 /* Figures, quotes, callouts and interludes establish their own block context,
    so their backgrounds never slide under a floated portrait: they sit beside
    it while it lasts, full width below it. */
@@ -491,10 +517,12 @@ section.rm-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
   background: linear-gradient(180deg, rgba(226, 235, 208, 0), ${c.moss} 42%, rgba(226, 235, 208, 0));
   border-top: 1px solid ${c.lineSoft}; border-bottom: 1px solid ${c.lineSoft};
 }
+/* The screen statements are the article's own voice, not quotations, so they
+   carry no decorative quote marks — and their long measure is justified. */
+.rm-prose > blockquote.rm-quote--screen::before { content: none; }
+.rm-prose > blockquote.rm-quote--screen p::after { content: none; }
 .rm-prose > blockquote.rm-quote--screen > p {
   max-width: none;
-  /* Centred, so nothing hangs: a hanging mark here would pull the line off
-     the axis it is balanced on. */
   text-indent: 0;
   font-weight: 500;
   font-size: clamp(1.55rem, 3.5vw, 3rem);
@@ -502,8 +530,20 @@ section.rm-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
   letter-spacing: -0.02em;
   color: ${c.greenInk};
   margin-inline: auto;
-  text-align: center;
-  text-wrap: balance;
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: none;
+  /* The pull-quote left inset does not apply to the full-width statements. */
+  padding-left: 0;
+}
+/* DisplayText sets each line as its own block, so a plain text-align:justify on
+   the paragraph cannot stretch them. Justify every line but the last by
+   forcing its single line to fill the measure (text-align-last). The last line
+   stays ragged, as justified text should. */
+.rm-prose > blockquote.rm-quote--screen .rm-dline:not(:last-child) > span {
+  text-align: justify;
+  text-align-last: justify;
+  text-justify: inter-word;
 }
 .rm-prose > blockquote.rm-quote--screen > footer { max-width: none; margin: 1.2rem auto 0; text-align: center; }
 /* The dark pivot: the merit question lands on near-black, the only dark
@@ -539,6 +579,9 @@ section.rm-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
 
   .rm-prose > blockquote.rm-quote--screen { padding-block: clamp(1.8rem, 5vh, 2.6rem); }
   .rm-prose > blockquote.rm-quote--screen > p { text-align: left; }
+  /* On a narrow measure, forcing each line flush both edges opens rivers, so
+     the statements read ranged-left like the body copy does here. */
+  .rm-prose > blockquote.rm-quote--screen .rm-dline:not(:last-child) > span { text-align: left; text-align-last: left; }
   .rm-open, .rm-open--low { min-height: auto; padding-block: clamp(0.8rem, 3vh, 1.4rem) clamp(0.7rem, 2.4vh, 1.2rem); }
   .rm-open--bare, .rm-open--low.rm-open--bare { min-height: auto; padding-block: 1.6rem 1.2rem; }
   .rm-open--stack .rm-open-num { font-size: clamp(4rem, 22vw, 7rem); }
@@ -638,7 +681,15 @@ section.rm-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
   color: ${c.green};
   font-variant-numeric: tabular-nums;
 }
-.il-olay-note { font-family: ${f.sans}; font-size: 0.7rem; font-weight: 500; line-height: 1.45; color: ${c.textFaint}; }
+.il-olay-note { font-family: ${f.sans}; font-size: 0.86rem; font-weight: 500; line-height: 1.45; color: ${c.textFaint}; }
+/* On a phone the illustration band is only ~80px tall, so a badge floated over
+   it covers the drawing. Drop the badges out of the overlay and set them as a
+   row at the top of the panel, above the drawing, where nothing overlaps. */
+@media (max-width: 620px) {
+  .il-olays { position: static; padding: 0.9rem 0.9rem 0.2rem; flex-wrap: wrap; }
+  .il-olay { min-width: 0; }
+  .il:has(.il-olays) > .il-bars { padding-top: clamp(1.1rem, 2.6vw, 1.7rem); }
+}
 
 /* ---------- hero scroll cue ---------- */
 .hero-scroll {
@@ -676,8 +727,148 @@ section.rm-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
 }
 .embed .rm-grain { display: none; }
 
+/* ---------- figure polish: depth, motion, number clarity ---------- */
+/* Bars read as inset channels rather than flat pills. */
+.il-bar-track, .wf-track, .led-bar, .band-meter { box-shadow: inset 0 1px 2px rgba(31, 41, 23, 0.1); }
+/* Numerals align and never jitter as they count up. */
+.band-value, .twohundred-value, .kit-total-v, .led-v--big, .il-olay-num, .hero-fig-big { font-variant-numeric: tabular-nums; }
+/* Cards lift on hover where a real pointer exists; untouched on touch. */
+@media (hover: hover) and (pointer: fine) {
+  .band-cell, .fact-row, .merit-pairs > div, .slip {
+    transition: transform 0.35s ${motion.ease}, box-shadow 0.35s ${motion.ease};
+  }
+  .band-cell:hover, .fact-row:hover, .merit-pairs > div:hover, .slip:hover {
+    transform: translateY(-3px);
+    box-shadow: ${sh.lift};
+  }
+}
+/* A hairline between an illustrated panel's drawing and its caption, so the
+   reading of the figure sits apart from the figure itself. */
+.il-cap { border-top: 1px solid ${c.lineSoft}; }
+
+/* ---------- ambient light wash: dawn to dusk ----------
+   A fixed, scroll-linked colour temperature behind the whole read — cool at the
+   hopeful open, warming and lowering toward the heavy close. Soft-light so it
+   tints the grounds without touching the legibility of the type above it. */
+.rm-atmo { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
+.rm-atmo-layer { position: absolute; inset: 0; mix-blend-mode: soft-light; will-change: opacity; }
+.rm-atmo-dawn { opacity: 0.5; background: linear-gradient(180deg, #b9d2e6 0%, #e9f0dd 55%, ${c.paper} 100%); }
+.rm-atmo-dusk { opacity: 0; background: linear-gradient(180deg, #f4c98e 0%, #cf8a56 45%, #4a3120 100%); }
+@supports (animation-timeline: scroll()) {
+  .rm-atmo-dawn { animation: rm-dawn linear both; animation-timeline: scroll(root); }
+  .rm-atmo-dusk { animation: rm-dusk linear both; animation-timeline: scroll(root); }
+  @keyframes rm-dawn { from { opacity: 0.5; } to { opacity: 0; } }
+  @keyframes rm-dusk { 0%, 55% { opacity: 0; } 100% { opacity: 0.42; } }
+}
+.embed .rm-atmo { display: none; }
+/* The wash tints the light grounds only. The hero and the dark chapters sit
+   above it (z-index 2), so their near-black backgrounds stay as they were. */
+.hero { z-index: 2; }
+.rm-chapter.rm-chapter--dark { z-index: 2; }
+
+/* ---------- drifting dust: depth behind the column ---------- */
+.rm-dust {
+  position: absolute; inset: -8%;
+  opacity: 0.5;
+  background-image:
+    radial-gradient(3px 3px at 15% 22%, rgba(75, 115, 39, 0.2), transparent 60%),
+    radial-gradient(2px 2px at 68% 34%, rgba(150, 89, 55, 0.18), transparent 60%),
+    radial-gradient(2.5px 2.5px at 42% 72%, rgba(75, 115, 39, 0.16), transparent 60%),
+    radial-gradient(2px 2px at 84% 66%, rgba(75, 115, 39, 0.14), transparent 60%),
+    radial-gradient(2px 2px at 28% 88%, rgba(150, 89, 55, 0.14), transparent 60%),
+    radial-gradient(2.5px 2.5px at 92% 14%, rgba(75, 115, 39, 0.16), transparent 60%);
+  animation: rm-dust 46s linear infinite alternate;
+}
+@keyframes rm-dust { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(-2.5%, -2%, 0); } }
+
+/* ---------- cursor-reactive screen statements ---------- */
+.rm-prose > blockquote.rm-quote--screen > p {
+  transform: translate(var(--qx, 0px), var(--qy, 0px)) rotate(var(--qr, 0deg));
+  transition: transform 0.4s ${motion.soft};
+  will-change: transform;
+}
+
+/* ---------- openable details ---------- */
+.rm-details { margin-top: 1.2rem; border-top: 1px solid ${c.line}; }
+.rm-details > summary { cursor: pointer; list-style: none; padding: 0.85rem 0; font-family: ${f.sans}; font-size: 0.88rem; font-weight: 600; letter-spacing: 0.06em; color: ${c.greenInk}; display: flex; align-items: center; gap: 0.6rem; }
+.rm-details > summary::-webkit-details-marker { display: none; }
+.rm-details > summary::before { content: "+"; font-size: 1.15rem; line-height: 1; color: ${c.green}; }
+.rm-details[open] > summary::before { content: "\\2013"; }
+.rm-details > summary:focus-visible { outline: 2px solid ${c.green}; outline-offset: 3px; }
+.rm-details > p { margin: 0 0 1rem; }
+
+/* ---------- ambient sound toggle ---------- */
+.rm-sound { position: fixed; right: clamp(1rem, 3vw, 2rem); bottom: clamp(1rem, 3vw, 2rem); z-index: 82; width: 46px; height: 46px; display: flex; align-items: flex-end; justify-content: center; gap: 3px; padding-bottom: 14px; background: rgba(13, 21, 10, 0.6); border: 1px solid ${c.onDarkLine}; border-radius: 999px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); cursor: pointer; }
+.rm-sound > span { width: 3px; height: 7px; border-radius: 2px; background: ${c.onDarkAccent}; opacity: 0.55; }
+.rm-sound.is-on > span { animation: rm-eq 0.9s ${motion.soft} infinite alternate; }
+.rm-sound.is-on > span:nth-child(2) { animation-delay: 0.15s; }
+.rm-sound.is-on > span:nth-child(3) { animation-delay: 0.3s; }
+.rm-sound.is-on > span:nth-child(4) { animation-delay: 0.45s; }
+@keyframes rm-eq { from { height: 6px; opacity: 0.5; } to { height: 20px; opacity: 1; } }
+.rm-sound:focus-visible { outline: 2px solid ${c.onDarkAccent}; outline-offset: 3px; }
+.embed .rm-sound { display: none; }
+
+/* ---------- photographic grade ----------
+   The photographs come from many sources with clashing white balance. One
+   gentle warm-green grade makes them read as a single commissioned set. */
+.rm-shot, .rm-panel img, .rm-float img {
+  filter: saturate(0.95) contrast(1.03) sepia(0.1) hue-rotate(12deg);
+}
+
+/* ---------- photo parallax ----------
+   Full-bleed panels drift slowly as they cross the viewport. Scroll-linked, so
+   no JavaScript runs it; the image is over-scaled so the drift never gaps. */
+.rm-panel { overflow: hidden; }
+@supports (animation-timeline: view()) {
+  .rm-panel img {
+    animation: rm-parallax linear both;
+    animation-timeline: view();
+    animation-range: entry 0% exit 100%;
+    will-change: transform;
+  }
+  @keyframes rm-parallax {
+    from { transform: scale(1.12) translateY(-3.2%); }
+    to { transform: scale(1.12) translateY(3.2%); }
+  }
+}
+
+/* ---------- chapter opener: a low warm light behind the numeral ---------- */
+.rm-open { position: relative; }
+.rm-open::before {
+  content: "";
+  position: absolute;
+  left: -6%;
+  top: -30%;
+  width: 46%;
+  height: 260%;
+  background: radial-gradient(50% 50% at 30% 40%, rgba(102, 143, 57, 0.18), rgba(102, 143, 57, 0) 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+.rm-chapter--dark .rm-open::before { background: radial-gradient(50% 50% at 30% 40%, rgba(183, 217, 140, 0.16), rgba(183, 217, 140, 0) 70%); }
+.rm-open-plate, .rm-open-copy { position: relative; z-index: 1; }
+
+/* ---------- chapter seam: a faint centred hairline between light chapters -- */
+.rm-chapter + .rm-chapter:not(.rm-chapter--dark)::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(60%, 40rem);
+  height: 1px;
+  background: linear-gradient(90deg, rgba(31, 41, 23, 0), ${c.line}, rgba(31, 41, 23, 0));
+  pointer-events: none;
+}
+
 /* ---------- reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
+  .band-cell, .fact-row, .merit-pairs > div, .slip { transition: none; }
+  .th-arc { transition: none; }
+  .rm-panel img { animation: none; transform: none; }
+  .rm-dust { animation: none; }
+  .rm-sound.is-on > span { animation: none; }
+  .rm-prose > blockquote.rm-quote--screen > p { transition: none; }
   .hero-video { animation: none; }
   .rm-chapter::before { animation: none; }
   .rm-dline > span { transform: none !important; transition: none; }

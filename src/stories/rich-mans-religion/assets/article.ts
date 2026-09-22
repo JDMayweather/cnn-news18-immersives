@@ -31,6 +31,10 @@ export type Block =
   | { kind: "note"; text: string }
   | { kind: "scene"; ref: SceneRef; label: string; steps: SceneStep[] }
   | { kind: "panel"; layout?: PhotoLayout; w?: number; h?: number; src: string; alt: string; line?: string; credit: string }
+  /* A pair of photographs set side by side at a short crop — used where two
+     images belong to one thought (BCCI and the IPL). Cropped deliberately to a
+     band so the pair stays compact; the whole-frame rule applies to panels. */
+  | { kind: "duo"; label?: string; items: { src: string; alt: string; tag: string; credit: string }[] }
   | { kind: "screen"; text: string; cite?: string; role?: string; tone?: "light" | "dark" };
 
 export interface SceneStep {
@@ -67,14 +71,16 @@ export interface InterludeBar {
  * credited where it is placed; licenses are CC BY / CC BY-SA.
  */
 export const IMAGE_CREDITS: Record<string, string> = {
-  streetCricket: "Street cricket in Kerala. Vishnu gs, Wikimedia Commons, CC BY 3.0.",
-  maidan: "Cricket pitches at Azad Maidan, Mumbai. David.Clay.Photography, Wikimedia Commons, CC BY-SA 4.0.",
-  willowLogs: "Willow logs for making cricket bats. Mike Prince, Wikimedia Commons, CC BY 2.0.",
-  batStore: "Cricket bats in a store, Bengaluru. Gpkp, Wikimedia Commons, CC BY-SA 4.0.",
-  academy: "Abhimanyu Cricket Academy, Dehradun. Vjtechno, Wikimedia Commons, CC BY-SA.",
-  eden: "Eden Gardens, Kolkata, before a match. Chippu Abraham, Wikimedia Commons, CC BY-SA.",
-  playground: "A school playground in India. Teacher1943, Wikimedia Commons, CC BY-SA 4.0.",
-  schoolKids: "School children at a rural government school in Kanchipuram, Tamil Nadu. McKay Savage, Wikimedia Commons, CC BY 2.0.",
+  streetCricket: "Street cricket in Kerala. (Image Courtesy: Vishnu gs/Wikimedia Commons, CC BY 3.0)",
+  maidan: "Cricket pitches at Azad Maidan, Mumbai. (Image Courtesy: David.Clay.Photography/Wikimedia Commons, CC BY-SA 4.0)",
+  willowLogs: "Willow logs for making cricket bats. (Image Courtesy: Mike Prince/Wikimedia Commons, CC BY 2.0)",
+  batStore: "Cricket bats in a store, Bengaluru. (Image Courtesy: Gpkp/Wikimedia Commons, CC BY-SA 4.0)",
+  academy: "Abhimanyu Cricket Academy, Dehradun. (Image Courtesy: Vjtechno/Wikimedia Commons, CC BY-SA)",
+  eden: "Eden Gardens, Kolkata, before a match. (Image Courtesy: Chippu Abraham/Wikimedia Commons, CC BY-SA)",
+  playground: "A school playground in India. (Image Courtesy: Teacher1943/Wikimedia Commons, CC BY-SA 4.0)",
+  schoolKids: "School children at a rural government school in Kanchipuram, Tamil Nadu. (Image Courtesy: McKay Savage/Wikimedia Commons, CC BY 2.0)",
+  bcci: "The Board of Control for Cricket in India. (Image Courtesy: BCCI/News18)",
+  iplMatch: "An IPL match between Chennai Super Kings and Kolkata Knight Riders at Chepauk, Chennai. (Image Courtesy: Chandrachoodan Gopalakrishnan/Wikimedia Commons, CC BY 3.0)",
 };
 
 export const SHOTS = {
@@ -97,6 +103,8 @@ export const SHOTS = {
   eden: "https://commons.wikimedia.org/wiki/Special:FilePath/Eden%20Gardens%20Kolkata.jpg?width=1280",
   playground: "https://commons.wikimedia.org/wiki/Special:FilePath/Puranchandra%20Vidyaniketan.JPG?width=1280",
   schoolKids: "https://commons.wikimedia.org/wiki/Special:FilePath/Tamil%20Nadu%20school%20kids.jpg?width=1280",
+  bcci: "https://images.news18.com/ibnkhabar/uploads/2019/11/BCCI_File_Photo_630_630.jpg?im=FitAndFill,width=1200,height=675",
+  iplMatch: "https://commons.wikimedia.org/wiki/Special:FilePath/IPL%20T20%20Chennai%20vs%20Kolkata.JPG?width=1280",
 } as const;
 
 /* Scene step copy: drawn from sentences the article already contains. */
@@ -147,7 +155,7 @@ export const CHAPTERS: Chapter[] = [
   {
     id: "the-cost",
     num: "02",
-    title: "The cost",
+    title: "The \nCost",
     dark: true,
     blocks: [
       { kind: "p", text: "In a recent interview, the Board of Control for Cricket in India (BCCI) secretary Devajit Saikia was asked about cricket being an expensive sport and how most of the current crop of international stars in India come from humble backgrounds." },
@@ -194,7 +202,7 @@ export const CHAPTERS: Chapter[] = [
       { kind: "p", text: "But, again, those who earn are exceptions, dwarfed by the sheer number of aspirants — Rathore explains that even if one student from all cricket academies in Jaipur, one of the 41 districts in Rajasthan, were to make it to the state level, there would need to be 200 vacant spots, which don’t exist." },
       { kind: "quote", text: "“Suppose a child starts playing cricket at eight or nine, and his first board tournament is Under-16,\" Rathore adds. “He’ll get three or four matches — even if you calculate ₹40,000 per match, that makes about ₹2 lakhs for four matches. But his yearly fees, equipment, diet, training, it all costs two lakh rupees a year. Where is the earning? There is no return on investment. If he spends ₹1.5-2 lakhs yearly from age eight to fifteen, that’s ₹14-15 lakhs spent just to reach that level.\"" },
       { kind: "p", text: "In either case, in urban India, it’s these coaches and their connections to rich philanthropists that form the cricket support system. The state boards are hardly involved in it." },
-      { kind: "panel", layout: "wide", w: 1600, h: 900, src: SHOTS.gearHands, alt: "Cricket equipment being manufactured at Apex Cricket (JS Enterprises) in Meerut", credit: "Apex Cricket (JS Enterprises), Meerut. (News18)" },
+      { kind: "panel", layout: "wide", w: 1600, h: 900, src: SHOTS.gearHands, alt: "Cricket equipment being manufactured at Apex Cricket (JS Enterprises) in Meerut", credit: "Cricket equipment being made at Apex Cricket, Meerut. (Image Courtesy: Apex Cricket, JS Enterprises/News18)" },
       { kind: "p", text: "Of course, some coaches are also driven by the recognition and the possibility of getting more enrollments even if one of their pupils reaches the IPL. But with a bit more backing, several are willing to forego their profits." },
       { kind: "quote", text: "“Not just me, many people are doing this,\" Rathore says of helping cricketers. “But we can only do so much; we also have no backup. We haven’t received any government aid. If we had a scheme where the government allotted us land so we didn’t have to pay rent for the academy, we could make many more children’s costs free. Many things could be done to lower the cost, but we need that authorised support.\"" },
     ],
@@ -212,7 +220,7 @@ export const CHAPTERS: Chapter[] = [
       { kind: "quote", text: "“And the cricket businessmen don’t focus on the local kids; their biggest business comes from the middle class and local cricket,\" Siddiqui adds. “They give free equipment to the top-level players, who don’t even need it because they get paid to use the brand. So then they have to recover their money from the children. It’s a difficult cycle to break.\"" },
       { kind: "p", text: "Several of the interviewees also mentioned how the prices of bats and gear have skyrocketed in recent months." },
       { kind: "p", text: "Varun Kumar of Apex Cricket (JS Enterprises) in Meerut, who has been in the manufacturing and wholesale business of cricket equipment for years, has an AI-designed warning written over his business’ poster: ‘From today onwards, the rates of all cricket goods have been increased by 35% because raw material has gotten more expensive’." },
-      { kind: "panel", layout: "float-right", w: 853, h: 1280, src: SHOTS.meerutPoster, alt: "A warning written over the business poster at Apex Cricket (JS Enterprises) in Meerut, announcing a 35% increase in the rates of all cricket goods", line: "“From today onwards, the rates of all cricket goods have been increased by 35% because raw material has gotten more expensive.”", credit: "Apex Cricket (JS Enterprises), Meerut. (News18)" },
+      { kind: "panel", layout: "float-right", w: 853, h: 1280, src: SHOTS.meerutPoster, alt: "A warning written over the business poster at Apex Cricket (JS Enterprises) in Meerut, announcing a 35% increase in the rates of all cricket goods", line: "“From today onwards, the rates of all cricket goods have been increased by 35% because raw material has gotten more expensive.”", credit: "(Image Courtesy: Apex Cricket, JS Enterprises/News18)" },
       { kind: "p", text: "He tells News18 that this relates to a rise in import costs for petroleum-based raw materials like nylon and synthetic leather, which are used for gloves, pads and other safety equipment. That, in turn, stems from the ongoing war in West Asia." },
       { kind: "p", text: "But its impact is relatively small. The lion’s share of exorbitant costs goes into retailers’ margins." },
       { kind: "p", text: "Kumar explains that making a pair of gloves costs them ₹700 in raw material, ₹350 in labor charges, and ₹150 in electricity and rent expenses, on which they take a ₹100-200 profit." },
@@ -234,11 +242,11 @@ export const CHAPTERS: Chapter[] = [
     blocks: [
       { kind: "p", text: "So far, we have talked about class. But in India’s context, it’s almost impossible to untangle it from caste and religion." },
       { kind: "p", text: "Minz is the only Adivasi cricketer to have ever played in the IPL, taking Adivasi representation in the league to be around 0.12% when they make up to 9% of India’s population. There have been claims of some cricketers belonging to the Dalit community playing for the Indian men’s team, but none accept it as their identity publicly, and even the reported ones make up a fraction of the total." },
-      { kind: "scene", ref: "exclusions", label: "Two hundred children, read four ways", steps: EXCLUSION_STEPS },
+      { kind: "scene", ref: "exclusions", label: "The exclusion, read four ways", steps: EXCLUSION_STEPS },
       { kind: "p", text: "There has been negligible research on this under-representation. But it has been academically ascertained that India’s caste system is a major driver of economic disparity between different population groups." },
       { kind: "p", text: "According to the Global Multidimensional Poverty Index 2021, five out of six multidimensionally poor people in India live in households whose head is from a Scheduled Tribe (ST), a Scheduled Caste (SC), or Other Backward Class (OBC)." },
       { kind: "p", text: "India has one of the highest populations of child laborers. The United Nations in 2022 found that most belong to the marginalised communities. Global research has found that a significant portion of child laborers don’t attend school, the first place where they can be exposed to cricket or other sports." },
-      { kind: "panel", layout: "float-left", w: 1440, h: 1914, src: SHOTS.krantiGaud, alt: "Cricketer Kranti Gaud and her mother", line: "Kranti Gaud’s mother sold her jewelry to buy her a cricket kit", credit: "Kranti Gaud. (Instagram, via News18)" },
+      { kind: "panel", layout: "float-left", w: 1440, h: 1914, src: SHOTS.krantiGaud, alt: "Cricketer Kranti Gaud and her mother", line: "Kranti Gaud’s mother sold her jewelry to buy her a cricket kit", credit: "(Image Courtesy: Kranti Gaud, Instagram/News18)" },
       { kind: "p", text: "Sports are known to uplift people from such social barriers all around the world, but cricket is rarely the choice for rural India, where most of the population still resides." },
       { kind: "p", text: "For example, in 2009, Sanjay Pathak, a geography teacher in a government school in Bihar, took it upon himself to teach athletics to the girls in his school." },
       { kind: "p", text: "Clearing ancestral land to establish a club, he fought brickbats from colleagues (who don’t consider sports a career), trespassing from village boys, caste barriers, and patriarchy to polish dozens of talents who are now playing at the national level." },
@@ -313,12 +321,16 @@ export const CHAPTERS: Chapter[] = [
       { kind: "scene", ref: "divergence", label: "The same start, two homes", steps: DIVERGENCE_STEPS },
       { kind: "p", text: "But being at the same place at one point in life doesn’t mean that both had the same start. While Tendulkar was born to a poet-professor father and a government employee mother, Kambli’s story is hidden in the fifth paragraph of this article, in Vikas’ name, beginning with an abusive father, a mechanic, and a loving mother who died when he was 20." },
       { kind: "p", text: "While he and Tendulkar were both equally supported by Ramakant Archrekar, Kambli used to travel from and back to a confrontational room of 17 others. Dr. Dove’s research found that parents’ emotional support was crucial for talented cricketers, and only one of Tendulkar and Kambli had that, despite their arguably similar skill sets." },
+      { kind: "duo", label: "The two ends of the pipeline", items: [
+        { src: SHOTS.bcci, alt: "The BCCI logo", tag: "BCCI", credit: IMAGE_CREDITS.bcci },
+        { src: SHOTS.iplMatch, alt: "An IPL match under lights between Chennai Super Kings and Kolkata Knight Riders", tag: "IPL", credit: IMAGE_CREDITS.iplMatch },
+      ] },
       { kind: "screen", tone: "dark", text: "So, it begs the question: even if BCCI selectors and IPL owners don’t look at anything but performance, do all the players in the pool of selection have had the same opportunity?" },
       { kind: "p", text: "The poorer you are, the more likely you are to grow up in a dysfunctional home, to either not study at all or study in a government school without a PT teacher, to live in a village with no cricket facilities, to not have the right diet to avoid injuries in the future, and to not be able to show your talent to a coach who can teach you and might help you with expensive gear." },
       { kind: "p", text: "There’s nothing in a name, just like age is just a number in sports. But your name depends on where you come from — your state, district, village, and caste — and so does the time you have to become a cricketer in India." },
       { kind: "p", text: "Three of the five cricketers mentioned in the introduction belong to the same academy, which has produced one IPL star and, in credit to its coaches, half a dozen state-level players. But over a hundred, rich and poor, are still toiling hard for the same reward, with similar dedication." },
       { kind: "interlude", variant: "sunrise", label: "The same opportunity, on paper", notes: ["On paper, all of them have the same opportunity, and only the best will prevail. But the time, emotional support, stress, fallback options, and the need to make it are vastly different."] },
-      { kind: "p", text: "On paper, all of them have the same opportunity, and only the best will prevail. But the time, emotional support, stress, fallback options, and the need to make it are vastly different." },
+      { kind: "screen", tone: "dark", text: "On paper, all of them have the same opportunity, and only the best will prevail. But the time, emotional support, stress, fallback options, and the need to make it are vastly different." },
     ],
   },
 ];

@@ -145,24 +145,68 @@ function Willow() {
  * ten to a row: the filled block is a tenth of the whole, which is the figure
  * the article gives.
  */
+/* One child, drawn as a small figure holding a bat, so the academy reads as
+   people rather than tokens. `on` colours the one who gets a free place. */
+const HEAD = "M0 -46 a16 16 0 1 0 0.1 0 z";
+const BODY = "M-20 -8 h40 a7 7 0 0 1 7 7 v40 a13 13 0 0 1 -13 13 h-28 a13 13 0 0 1 -13 -13 v-40 a7 7 0 0 1 7 -7 z";
+const BAT = "M20 -2 L58 -40";
+
+function ChildFigure({ x, y = 168, scale = 1, on }: { x: number; y?: number; scale?: number; on: boolean }): React.JSX.Element {
+  const stroke = on ? C.green : C.leafMid;
+  const fill = on ? C.green : "none";
+  const op = on ? 0.95 : 0.6;
+  return (
+    <g transform={`translate(${x} ${y}) scale(${scale})`} opacity={op}>
+      <path className="il-draw" pathLength={1} d={HEAD} fill={fill} stroke={stroke} strokeWidth={on ? 0 : 2.2} />
+      <path className="il-draw" pathLength={1} d={BODY} fill={fill} stroke={stroke} strokeWidth={on ? 0 : 2.2} />
+      <path className="il-draw" pathLength={1} d={BAT} fill="none" stroke={stroke} strokeWidth={5} strokeLinecap="round" />
+    </g>
+  );
+}
+
+/* A banknote, for the share of wealth — a different unit from the people, so a
+   different mark. `on` fills it green; open notes are the rest. */
+function MoneyNote({ x, y, on }: { x: number; y: number; on: boolean }): React.JSX.Element {
+  const stroke = on ? C.green : C.leafMid;
+  return (
+    <g transform={`translate(${x} ${y})`} opacity={on ? 0.95 : 0.6}>
+      <rect className="il-draw" pathLength={1} x={-36} y={-22} width={72} height={44} rx={8} fill={on ? C.green : "none"} stroke={on ? "none" : stroke} strokeWidth={on ? 0 : 2.2} />
+      <circle className="il-draw" pathLength={1} cx={0} cy={0} r={11} fill="none" stroke={on ? C.paper : stroke} strokeWidth={2} opacity={0.6} />
+    </g>
+  );
+}
+
+/**
+ * Twenty of two hundred children get a free place — exactly one in ten. Rather
+ * than two hundred tokens, the panel shows the rate: ten children in a row, the
+ * one on a free place solid and held in an enclosure, the other nine open. The
+ * exact figures (20 of 200) stay in the overlay and caption; the drawing
+ * carries the proportion a reader can hold in their head.
+ */
 function Blades() {
-  const COLS = 20;
-  const rows = 10;
+  const count = 10;
+  const x0 = 190;
+  const step = (1440 - x0 * 2) / (count - 1);
+  const boxPad = 40;
   return (
     <>
-      {Array.from({ length: 200 }, (_, i) => {
-        const col = i % COLS;
-        const row = Math.floor(i / COLS) % rows;
-        const cx = 176 + col * 53;
-        const cy = 52 + row * 24;
-        const carried = i < 20;
-        return carried ? (
-          <circle key={i} className="il-rise" cx={cx} cy={cy} r={7.6} fill={C.green} opacity={0.92} />
-        ) : (
-          <circle key={i} className="il-draw" pathLength={1} cx={cx} cy={cy} r={7.6} fill="none" stroke={C.leafMid} strokeWidth={1.2} opacity={0.5} />
-        );
-      })}
-      <path className="il-draw" pathLength={1} d={`M140 ${28} H${140 + COLS * 53}`} fill="none" stroke={HAIR} strokeWidth={1} />
+      {/* the enclosure that holds the one on a free place */}
+      <rect
+        x={x0 - boxPad}
+        y={168 - 68}
+        width={boxPad * 2}
+        height={158}
+        rx={20}
+        fill={C.leafSoft}
+        fillOpacity={0.6}
+        stroke={C.green}
+        strokeWidth={2}
+      />
+      {/* the baseline the ten stand on */}
+      <path className="il-draw" pathLength={1} d={`M${x0 - 70} 246 H1370`} fill="none" stroke={HAIR} strokeWidth={1.2} />
+      {Array.from({ length: count }, (_, i) => (
+        <ChildFigure key={i} x={x0 + i * step} on={i === 0} />
+      ))}
     </>
   );
 }
@@ -191,29 +235,41 @@ function Selection() {
  * hundreds, dotted — the only way a share this lopsided can be read honestly
  * without a chart axis.
  */
+/**
+ * Few people, most of the wealth. Two rows of ten, in two units so the reader
+ * never confuses them: the top row is people (figures), the bottom is wealth
+ * (banknotes). About one figure filled against seven notes filled makes the
+ * lopsidedness the point of the panel. The exact shares — 8 of 100 people, 70
+ * of 100 of the wealth — stay in the overlay and the key.
+ */
 function Comparison() {
-  const grid = (ox: number, filled: number) => (
-    <>
-      {Array.from({ length: 100 }, (_, i) => {
-        const col = i % 10;
-        const row = Math.floor(i / 10);
-        const cx = ox + col * 30;
-        const cy = 46 + row * 27;
-        return i < filled ? (
-          <circle key={i} className="il-rise" cx={cx} cy={cy} r={9} fill={C.green} opacity={0.9} />
-        ) : (
-          <circle key={i} className="il-draw" pathLength={1} cx={cx} cy={cy} r={9} fill="none" stroke={C.leafMid} strokeWidth={1.1} opacity={0.45} />
-        );
-      })}
-    </>
-  );
+  const n = 10;
+  const x0 = 230;
+  const step = (W - x0 * 2) / (n - 1);
+  const peopleY = 108;
+  const wealthY = 250;
+  const peopleOn = 1; /* ~8% — fewer than one in ten */
+  const wealthOn = 7; /* 70% — seven in ten */
   return (
     <>
-      {grid(180, 8)}
-      {grid(880, 70)}
-      <path className="il-draw" pathLength={1} d={`M540 40 V${H - 40}`} fill="none" stroke={HAIR} strokeWidth={1} strokeDasharray="4 8" />
-      <path className="il-draw" pathLength={1} d={`M180 ${H - 24} H${180 + 9 * 30}`} fill="none" stroke={HAIR} strokeWidth={1} />
-      <path className="il-draw" pathLength={1} d={`M880 ${H - 24} H${880 + 9 * 30}`} fill="none" stroke={HAIR} strokeWidth={1} />
+      {/* the one in the people row, held, so the sliver is not lost */}
+      <rect
+        x={x0 - 46}
+        y={peopleY - 62}
+        width={92}
+        height={132}
+        rx={18}
+        fill={C.leafSoft}
+        fillOpacity={0.6}
+        stroke={C.green}
+        strokeWidth={2}
+      />
+      {Array.from({ length: n }, (_, i) => (
+        <ChildFigure key={`p${i}`} x={x0 + i * step} y={peopleY} scale={0.62} on={i < peopleOn} />
+      ))}
+      {Array.from({ length: n }, (_, i) => (
+        <MoneyNote key={`w${i}`} x={x0 + i * step} y={wealthY} on={i < wealthOn} />
+      ))}
     </>
   );
 }
@@ -265,9 +321,9 @@ function Sunrise() {
  */
 const KEYS: Partial<Record<InterludeVariant, string[]>> = {
   willow: ["Twenty years, one mark a year", "Twenty rings in the trunk", "The bat cut from it"],
-  blades: ["Every dot is a child in the academy", "The filled dots are the 20 on free places"],
+  blades: ["Each figure is one in ten children in the academy", "The one held in green is on a free place — 20 of the 200"],
   selection: ["Five hopefuls", "About \u20b91,500 to be seen, against \u20b91\u20131.5 lakhs for the year"],
-  comparison: ["8 of 100 people", "70 of 100 of the wealth"],
+  comparison: ["Each figure a share of the people — fewer than one in ten", "Each note a share of the wealth — seven in ten"],
   clock: ["45 minutes of the school day", "The 1\u20131.5 hours other sports ask for"],
   /* One lane per thing the article says differs. */
   sunrise: ["Time", "Emotional support", "Stress", "Fallback options", "The need to make it"],
@@ -286,7 +342,7 @@ const OVERLAYS: Partial<
   Record<InterludeVariant, { value: number; note: string; pos?: "left" | "right" }[]>
 > = {
   willow: [{ value: 20, note: "years, one ring each" }],
-  blades: [{ value: 20, note: "of 200 children, on free places" }],
+  blades: [{ value: 20, note: "of 200 children — one in ten — on free places" }],
   selection: [{ value: 5, note: "hopefuls" }],
   comparison: [
     { value: 8, note: "of 100 people", pos: "left" },

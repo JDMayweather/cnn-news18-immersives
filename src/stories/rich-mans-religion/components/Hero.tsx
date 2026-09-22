@@ -40,7 +40,7 @@ export default function Hero(): React.JSX.Element {
       <video
         ref={videoRef}
         className="hero-video"
-        src="/dhoni_six.mp4"
+        src="/kids_gully_cricket.mp4"
         autoPlay
         muted
         loop
@@ -74,7 +74,8 @@ export default function Hero(): React.JSX.Element {
               Begin reading
             </a>
             <p className="hero-meta">
-              {META.byline} &middot; {META.published} &middot; {META.readTime}
+              <span className="hero-byline">{META.byline}</span>
+              {META.published} &middot; {META.readTime}
             </p>
           </div>
         </div>
