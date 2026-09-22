@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { isEmbedMode, prefersReducedMotion } from "@/core/responsive/viewport";
+import { prefersReducedMotion } from "@/core/responsive/viewport";
 
 /**
  * Display type, set line by line with Pretext.
@@ -35,7 +35,7 @@ export default function DisplayText({
   useEffect(() => {
     const el = ref.current;
     if (!el || typeof window === "undefined") return;
-    if (prefersReducedMotion() || isEmbedMode() || typeof IntersectionObserver === "undefined") {
+    if (prefersReducedMotion() || typeof IntersectionObserver === "undefined") {
       setShown(true);
       return;
     }

@@ -76,7 +76,7 @@ function useEmbedResize(): void {
 function useQuoteTilt(): void {
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (isEmbedMode() || prefersReducedMotion()) return;
+    if (prefersReducedMotion()) return;
     if (typeof matchMedia !== "function" || !matchMedia("(pointer: fine)").matches) return;
 
     const quotes = Array.from(document.querySelectorAll<HTMLElement>(".rm-quote--screen"));

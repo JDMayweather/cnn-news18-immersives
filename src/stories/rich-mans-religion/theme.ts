@@ -410,7 +410,7 @@ export const globalCss = `
   backdrop-filter: blur(12px) saturate(1.2);
   border: 1px solid rgba(31, 41, 23, 0.08);
   border-radius: ${theme.radius.pill};
-}.embed .progress-wrap { display: none; }
+}
 
 /* Justification needs a long measure to keep word spaces even. On a phone the
    column is about 40 characters, so it drops back to ranged-left. */

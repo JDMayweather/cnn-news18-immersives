@@ -555,17 +555,8 @@ section.rm-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
 }
 .rm-prose > blockquote.rm-quote--screen-dark > p { color: ${c.onDark}; }
 
-/* ---------- embed ---------- */
-.embed .hero { min-height: auto; padding-block: 3.5rem 5rem; }
-.embed .il { margin-block: 2.4rem; }
-/* An embed has no pinned scroll of its own: the scene unsticks and reads down. */
-.embed .rm-open { min-height: auto; padding-block: 1.4rem 2rem; }
-.embed .rm-scene { grid-template-columns: 1fr; }
-.embed .rm-scene-stage { position: static; }
-.embed .rm-scene-count { display: none; }
-.embed .rm-step { min-height: auto; padding: 1.1rem 0 0 1.5rem; opacity: 1; }
-
-.embed .rm-prose > blockquote.rm-quote--screen { min-height: auto; padding-block: 3rem; }
+/* The embed is a scrolling viewport, identical to the native page: pinned
+   scenes, reveals and scroll animations all run. No embed-only downgrades. */
 
 /* ---------- narrow screens: the stage holds, the steps slide under it ------ */
 @media (max-width: 900px) {
@@ -714,7 +705,6 @@ section.rm-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
   animation: rmWheel 2.2s ${motion.soft} infinite;
 }
 @keyframes rmWheel { 0% { transform: translateY(0); opacity: 1; } 60% { transform: translateY(12px); opacity: 0; } 100% { transform: translateY(0); opacity: 0; } }
-.embed .hero-scroll { display: none; }
 
 /* ---------- grain: paper tooth over everything ---------- */
 .rm-grain {
@@ -725,7 +715,6 @@ section.rm-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
   opacity: 0.55;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0.18 0 0 0 0 0.24 0 0 0 0 0.12 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
 }
-.embed .rm-grain { display: none; }
 
 /* ---------- figure polish: depth, motion, number clarity ---------- */
 /* Bars read as inset channels rather than flat pills. */
@@ -760,7 +749,6 @@ section.rm-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
   @keyframes rm-dawn { from { opacity: 0.5; } to { opacity: 0; } }
   @keyframes rm-dusk { 0%, 55% { opacity: 0; } 100% { opacity: 0.42; } }
 }
-.embed .rm-atmo { display: none; }
 /* The wash tints the light grounds only. The hero and the dark chapters sit
    above it (z-index 2), so their near-black backgrounds stay as they were. */
 .hero { z-index: 2; }
@@ -806,7 +794,6 @@ section.rm-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
 .rm-sound.is-on > span:nth-child(4) { animation-delay: 0.45s; }
 @keyframes rm-eq { from { height: 6px; opacity: 0.5; } to { height: 20px; opacity: 1; } }
 .rm-sound:focus-visible { outline: 2px solid ${c.onDarkAccent}; outline-offset: 3px; }
-.embed .rm-sound { display: none; }
 
 /* ---------- photographic grade ----------
    The photographs come from many sources with clashing white balance. One

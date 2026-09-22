@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { isEmbedMode, prefersReducedMotion } from "@/core/responsive/viewport";
+import { prefersReducedMotion } from "@/core/responsive/viewport";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -16,7 +16,7 @@ export function useRiseObserver(): void {
     const elements = Array.from(document.querySelectorAll<HTMLElement>(".rm-rise:not(.is-in)"));
     if (!elements.length) return;
 
-    if (prefersReducedMotion() || isEmbedMode()) {
+    if (prefersReducedMotion()) {
       elements.forEach((el) => el.classList.add("is-in"));
       return;
     }
@@ -37,8 +37,9 @@ export function useRiseObserver(): void {
 }
 
 /**
- * Runs a GSAP scene scoped to one element, and never in embed or
- * reduced-motion mode (in those modes the markup renders in its final state).
+ * Runs a GSAP scene scoped to one element, and never in reduced-motion mode
+ * (there the markup renders in its final state). The embed behaves like the
+ * native page, so scenes run there too.
  */
 export function useScene<T extends HTMLElement>(build: (root: T) => void): React.RefObject<T> {
   const ref = useRef<T | null>(null);
@@ -46,14 +47,13 @@ export function useScene<T extends HTMLElement>(build: (root: T) => void): React
   buildRef.current = build;
 
   const reduced = prefersReducedMotion();
-  const embed = isEmbedMode();
 
   useEffect(() => {
     const root = ref.current;
-    if (!root || reduced || embed || typeof window === "undefined") return;
+    if (!root || reduced || typeof window === "undefined") return;
     const ctx = gsap.context(() => buildRef.current(root), root);
     return () => ctx.revert();
-  }, [reduced, embed]);
+  }, [reduced]);
 
   return ref as React.RefObject<T>;
 }
