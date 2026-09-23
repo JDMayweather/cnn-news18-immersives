@@ -74,6 +74,14 @@ export default function Preloader(): React.JSX.Element | null {
     return () => window.clearTimeout(t);
   }, [leaving]);
 
+  useEffect(() => {
+    if (!gone) return;
+    /* Tell the page the intro is over so staged entrances (the hero sequence)
+       can begin — on skip this fires on mount, so the hero never waits. */
+    document.documentElement.classList.add("intro-done");
+    document.documentElement.style.overflow = "";
+  }, [gone]);
+
   if (gone) return null;
 
   return (

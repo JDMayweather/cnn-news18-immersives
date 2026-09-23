@@ -633,3 +633,49 @@ html.js .index-row.is-in .index-link { opacity: 1; transform: none; }
   .home-grain { display: none; }
   .index-row .index-link { opacity: 1; transform: none; transition: none; }
 }
+
+/* ============================================================
+   OVERHAUL 4 — cinematic hero sequencing, index breathing room,
+   preview insight card. Durations use the shared motion tokens.
+   ============================================================ */
+
+/* --- Hero: stage image → kicker → headline → dek → CTA → meta --- */
+html.js .lead-hero-media { clip-path: inset(0 0 100% 0); }
+html.js.intro-done .lead-hero-media { clip-path: inset(0 0 0 0); transition: clip-path var(--mo-cinematic, 1200ms) var(--ease-inout); }
+html.js .lead-hero-copy > * { opacity: 0; transform: translateY(28px); }
+html.js.intro-done .lead-hero-copy > * {
+  opacity: 1; transform: none;
+  transition: opacity var(--mo-editorial, 700ms) var(--ease-std), transform var(--mo-editorial, 700ms) var(--ease-std);
+}
+html.js.intro-done .lead-hero-copy > *:nth-child(1) { transition-delay: 0.35s; }
+html.js.intro-done .lead-hero-copy > *:nth-child(2) { transition-delay: 0.48s; }
+html.js.intro-done .lead-hero-copy > *:nth-child(3) { transition-delay: 0.61s; }
+html.js.intro-done .lead-hero-copy > *:nth-child(4) { transition-delay: 0.74s; }
+html.js.intro-done .lead-hero-copy > *:nth-child(5) { transition-delay: 0.87s; }
+html.js .lead-hero .share { opacity: 0; transition: opacity var(--mo-editorial, 700ms) var(--ease-std) 1s; }
+html.js.intro-done .lead-hero .share { opacity: 1; }
+
+/* --- Archive: more breathing room --- */
+.all { padding-top: clamp(3rem, 8vw, 6rem); padding-bottom: clamp(3rem, 9vw, 7rem); }
+.section-head { margin-bottom: clamp(1.6rem, 4vw, 2.8rem); }
+.index-link { padding: clamp(2rem, 4.5vw, 3.6rem) 0.5rem; }
+.index-row:first-child .index-link { padding-top: clamp(1.4rem, 3vw, 2.2rem); }
+
+/* --- Cursor preview becomes a small insight card --- */
+.index-preview {
+  width: 340px; aspect-ratio: auto; height: auto;
+  background: #101216; border: 1px solid var(--line);
+  display: grid; grid-template-rows: auto auto;
+}
+.index-preview > .card-art,
+.index-preview > .cover-play { aspect-ratio: 16 / 10; width: 100%; height: auto; }
+.index-preview .cover-play-btn { display: none; }
+.index-preview-cap { display: grid; gap: 8px; padding: 14px 16px 16px; }
+.index-preview-tags { font-family: "Inter", sans-serif; font-size: 0.66rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--n18-red); }
+.index-preview-dek { font-family: "Inter", sans-serif; font-size: 0.82rem; line-height: 1.5; color: var(--ink-2); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.index-preview-foot { display: flex; gap: 12px; font-family: "Inter", sans-serif; font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); }
+
+@media (prefers-reduced-motion: reduce) {
+  html.js .lead-hero-media { clip-path: none; }
+  html.js .lead-hero-copy > *, html.js .lead-hero .share { opacity: 1; transform: none; transition: none; }
+}

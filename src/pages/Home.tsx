@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { getAllStories } from "@/router/stories";
+import { MOTION_CSS_VARS } from "@/motion/tokens";
 import Preloader from "./Preloader";
 import "./Home.css";
 
@@ -246,6 +247,7 @@ export default function Home(): React.JSX.Element {
 
   return (
     <div className="home-page">
+      <style>{`.home-page{${MOTION_CSS_VARS}}`}</style>
       <Preloader />
       <div className="home-grain" aria-hidden="true" />
       {/* Utility strip */}
@@ -400,9 +402,25 @@ export default function Home(): React.JSX.Element {
               ))}
             </ol>
           )}
-          {/* Cursor-following cover preview for the index (fine pointer only). */}
+          {/* Cursor-following cover preview + a line of insight (fine pointer). */}
           <div className={`index-preview${hovered ? " is-on" : ""}`} ref={previewRef} aria-hidden="true">
-            {hovered && <Cover meta={hovered.metadata} />}
+            {hovered && (
+              <>
+                <Cover meta={hovered.metadata} />
+                <span className="index-preview-cap">
+                  <span className="index-preview-tags">
+                    {(hovered.metadata.tags ?? []).slice(0, 3).join(" · ")}
+                  </span>
+                  {hovered.metadata.description && (
+                    <span className="index-preview-dek">{hovered.metadata.description}</span>
+                  )}
+                  <span className="index-preview-foot">
+                    {hovered.metadata.author && <span>{hovered.metadata.author}</span>}
+                    {hovered.metadata.readTimeMinutes && <span>{hovered.metadata.readTimeMinutes} min read</span>}
+                  </span>
+                </span>
+              </>
+            )}
           </div>
         </section>
         </div>
