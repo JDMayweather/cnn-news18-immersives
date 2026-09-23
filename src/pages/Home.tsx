@@ -30,6 +30,11 @@ const COVERS: Record<string, Cover> = {
     posterImg: "/cricket-poster.jpg",
     alt: "Cricketer hitting a six",
   },
+  "tamil-nadu-navodaya": {
+    kind: "img",
+    src: "https://commons.wikimedia.org/wiki/Special:FilePath/Supreme%20Court%20of%20India%2001.jpg?width=1200",
+    alt: "The Supreme Court of India",
+  },
 };
 
 const SECTIONS = [
@@ -156,11 +161,19 @@ export default function Home(): React.JSX.Element {
   const [activeTag, setActiveTag] = useState<string>("All");
 
   useEffect(() => {
-    setStories(
-      getAllStories()
-        .filter((s) => !s.metadata.hidden)
-        .map((s) => ({ metadata: s.metadata })),
-    );
+    const visible = getAllStories()
+      .filter((s) => !s.metadata.hidden)
+      .map((s, i) => ({ metadata: s.metadata, order: i }));
+    /* The latest immersive always leads: newest publish date first. Give a new
+       story the newest publishedAt and it becomes the lead automatically; equal
+       dates keep registration order. */
+    visible.sort((a, b) => {
+      const da = Date.parse(a.metadata.publishedAt ?? "") || 0;
+      const db = Date.parse(b.metadata.publishedAt ?? "") || 0;
+      if (db !== da) return db - da;
+      return a.order - b.order;
+    });
+    setStories(visible.map((s) => ({ metadata: s.metadata })));
   }, []);
 
   const today = useMemo(

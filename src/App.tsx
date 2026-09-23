@@ -9,6 +9,7 @@ import { sendResizeMessage } from "./core/messaging/iframe";
 import MontreuxStory, { metadata as montreuxMetadata } from "./stories/montreux";
 import TestStory, { metadata as testStoryMetadata } from "./stories/test-story";
 import RichMansReligion, { metadata as richManMetadata } from "./stories/rich-mans-religion";
+import TamilNaduNavodaya, { metadata as navodayaMetadata } from "./stories/tamil-nadu-navodaya";
 import Home from "./pages/Home";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -16,6 +17,11 @@ gsap.registerPlugin(ScrollTrigger);
 registerStory("rich-mans-religion", {
   default: RichMansReligion,
   metadata: richManMetadata,
+});
+
+registerStory("tamil-nadu-navodaya", {
+  default: TamilNaduNavodaya,
+  metadata: navodayaMetadata,
 });
 
 registerStory("montreux", {
