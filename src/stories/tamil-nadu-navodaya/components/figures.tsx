@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import gsap from "gsap";
 import { useScene, drawPaths } from "./motion";
 import { theme } from "../theme";
 import { THREE_QUESTIONS, type FigureRef } from "../assets/article";
@@ -64,16 +65,149 @@ export function LoneMap(): React.JSX.Element {
   );
 }
 
+/**
+ * The closing questions, staged as a cinematic full-screen sequence: a sticky
+ * stage holds the viewport while the reader scrolls through three tall step
+ * spacers, and the active question cross-fades in — one at a time. The article's
+ * three questions are shown verbatim. Reduced-motion / embed falls back to a
+ * plain numbered list so nothing depends on the pin.
+ */
 export function ThreeQuestions(): React.JSX.Element {
+  const [active, setActive] = useState(0);
+  const [pinned, setPinned] = useState(true);
+  const steps = useRef<(HTMLElement | null)[]>([]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const reduce = typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce || typeof IntersectionObserver === "undefined") {
+      setPinned(false);
+      return;
+    }
+    const nodes = steps.current.filter((n): n is HTMLElement => !!n);
+    if (!nodes.length) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (!e.isIntersecting) continue;
+          const i = nodes.indexOf(e.target as HTMLElement);
+          if (i >= 0) setActive(i);
+        }
+      },
+      { rootMargin: "-45% 0px -45% 0px", threshold: 0 },
+    );
+    nodes.forEach((n) => io.observe(n));
+    return () => io.disconnect();
+  }, []);
+
+  if (!pinned) {
+    return (
+      <div className="nv-fig nv-q-fig">
+        <p className="nv-fig-label">Three questions that will not disappear</p>
+        <ol className="nv-q-list">
+          {THREE_QUESTIONS.map((q, i) => (
+            <li className="nv-q-row nv-rise" key={i} style={{ ["--i" as string]: i }}>
+              <span className="nv-q-mark" aria-hidden="true">?</span>
+              <span className="nv-q-n">{String(i + 1).padStart(2, "0")}</span>
+              <span className="nv-q-text">{q}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+    );
+  }
+
   return (
-    <div className="nv-fig nv-q-fig">
-      <p className="nv-fig-label">Three questions that will not disappear</p>
-      <ol className="nv-q-list">
-        {THREE_QUESTIONS.map((q, i) => (
-          <li className="nv-q-row nv-rise" key={i} style={{ ["--i" as string]: i }}>
-            <span className="nv-q-mark" aria-hidden="true">?</span>
-            <span className="nv-q-n">{String(i + 1).padStart(2, "0")}</span>
-            <span className="nv-q-text">{q}</span>
+    <div className="nv-qseq" role="group" aria-label="Three questions that will not disappear">
+      <div className="nv-qseq-stage">
+        <p className="nv-qseq-kicker">Three questions that will not disappear</p>
+        <div className="nv-qseq-frame">
+          {THREE_QUESTIONS.map((q, i) => (
+            <p key={i} className={`nv-qseq-q${i === active ? " is-on" : i < active ? " is-past" : ""}`}>
+              {q}
+            </p>
+          ))}
+        </div>
+        <span className="nv-qseq-count" aria-hidden="true">
+          {String(active + 1).padStart(2, "0")} / {String(THREE_QUESTIONS.length).padStart(2, "0")}
+        </span>
+      </div>
+      <div className="nv-qseq-track" aria-hidden="true">
+        {THREE_QUESTIONS.map((_, i) => (
+          <span
+            className="nv-qseq-step"
+            key={i}
+            ref={(el) => {
+              steps.current[i] = el;
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Not just about Hindi: the article names three dimensions — language,
+ * federalism and educational opportunity — that converge on one dispute. A
+ * three-axis diagram draws the lines in on scroll and lands on the centre.
+ * Every word here is one the article uses for these dimensions.
+ */
+export function ThreeAxis(): React.JSX.Element {
+  const ref = useScene<HTMLDivElement>((root) => {
+    drawPaths(root, ".nv-axis-draw", { stagger: 0.12, duration: 1 });
+    gsap.from(root.querySelectorAll(".nv-axis-rise"), {
+      opacity: 0,
+      scale: 0.7,
+      transformOrigin: "center",
+      transformBox: "fill-box",
+      duration: 0.7,
+      ease: "power2.out",
+      stagger: 0.12,
+      scrollTrigger: { trigger: root, start: "top 78%", once: true },
+    });
+  });
+  const L = { x: 450, y: 74 };
+  const F = { x: 130, y: 476 };
+  const E = { x: 770, y: 476 };
+  const C = { x: 450, y: 316 };
+  return (
+    <div className="nv-fig nv-axis" ref={ref}>
+      <p className="nv-fig-label">Is this really about Hindi?</p>
+      <svg className="nv-axis-svg" viewBox="0 0 900 560" role="img" aria-label="Three dimensions — language, federalism and educational opportunity — converging on one dispute.">
+        {[[L, C], [F, C], [E, C], [L, F], [F, E], [E, L]].map(([a, b], i) => (
+          <path key={i} className="nv-axis-draw" pathLength={1} d={`M${a.x} ${a.y} L${b.x} ${b.y}`} fill="none" stroke={theme.colors.onDarkLine} strokeWidth={1.4} />
+        ))}
+        {[L, F, E].map((p, i) => (
+          <circle key={i} className="nv-axis-rise" cx={p.x} cy={p.y} r={9} fill={theme.colors.onDarkAccent} />
+        ))}
+        <circle className="nv-axis-rise" cx={C.x} cy={C.y} r={15} fill={theme.colors.clay} />
+        <text className="nv-axis-label" x={L.x} y={L.y - 22} textAnchor="middle">LANGUAGE</text>
+        <text className="nv-axis-label" x={F.x} y={F.y + 34} textAnchor="middle">FEDERALISM</text>
+        <text className="nv-axis-label" x={E.x} y={E.y + 34} textAnchor="middle">EDUCATION</text>
+        <text className="nv-axis-center" x={C.x} y={C.y + 46} textAnchor="middle">THE DISPUTE</text>
+      </svg>
+    </div>
+  );
+}
+
+/**
+ * The Supreme Court intervention, staged as three emphasis beats. Each is a
+ * verbatim fragment of the article's own sentences on the hearing (the date,
+ * the extension, the instruction) — set large and revealed on scroll. The full
+ * sentence still runs, unchanged, in the paragraph above; nothing is added.
+ */
+const COURT_BEATS: string[] = ["September 17", "Three more months", "Dialogue"];
+
+export function CourtScene(): React.JSX.Element {
+  return (
+    <div className="nv-fig nv-court">
+      <p className="nv-fig-label">The Court intervenes</p>
+      <ol className="nv-court-list">
+        {COURT_BEATS.map((b, i) => (
+          <li className="nv-court-beat nv-rise" key={i} style={{ ["--i" as string]: i }}>
+            <span className="nv-court-n" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
+            <span className="nv-court-big">{b}</span>
           </li>
         ))}
       </ol>
@@ -82,13 +216,16 @@ export function ThreeQuestions(): React.JSX.Element {
 }
 
 /* ------------------------------------------------------------------ app */
-
 export function Figure({ figure }: { figure: FigureRef }): React.JSX.Element | null {
   switch (figure) {
     case "loneMap":
       return <LoneMap />;
     case "threeQuestions":
       return <ThreeQuestions />;
+    case "threeAxis":
+      return <ThreeAxis />;
+    case "court":
+      return <CourtScene />;
     default:
       return null;
   }

@@ -31,7 +31,7 @@ export interface SceneStep {
 
 export type SceneRef = "language" | "timeline";
 
-export type FigureRef = "loneMap" | "threeQuestions";
+export type FigureRef = "loneMap" | "threeQuestions" | "threeAxis" | "court";
 
 export type InterludeVariant = "reserve" | "kolam";
 
@@ -147,6 +147,7 @@ export const CHAPTERS: Chapter[] = [
       { kind: "p", text: "Partly, but not entirely. Hindi is clearly at the centre of the current dispute. The Supreme Court itself focussed on the issue during the hearing Thursday. But reducing the controversy to a “Tamil Nadu does not want Hindi\" narrative misses two other dimensions." },
       { kind: "p", text: "The first is the language policy. Tamil Nadu follows a two-language model, while Navodaya follows a three-language structure. The second is federalism. Tamil Nadu has argued that it cannot be compelled to accept an optional central scheme and has questioned whether the state can be directed to provide land for it." },
       { kind: "p", text: "There is also the question of educational opportunity. The Centre’s argument is that JNVs offer free residential education, particularly to talented rural students, and that Tamil Nadu’s students should not be denied access to the scheme. The Centre has also maintained that Tamil can be accommodated in the schools and that the state’s existing education system would continue unaffected." },
+      { kind: "figure", ref: "threeAxis" },
       { kind: "p", text: "This tension is what lies at the heart of the dispute." },
       { kind: "screen", tone: "dark", text: "Tamil Nadu sees the three-language structure as conflicting with a policy it has deliberately chosen to follow. The Centre sees Navodaya as an additional educational opportunity that need not displace the state’s own schools or syllabus." },
     ],
@@ -157,6 +158,7 @@ export const CHAPTERS: Chapter[] = [
     title: "What Supreme Court’s Intervention Means",
     blocks: [
       { kind: "p", text: "The Supreme Court’s latest intervention seeks to move the dispute towards accommodation. The court has refused to withdraw its direction to Tamil Nadu to identify land in every district, but has given the state three more months to do so. It has also urged Chennai and the Centre to resolve their differences through dialogue." },
+      { kind: "figure", ref: "court" },
       { kind: "p", text: "The court’s position appears to suggest that the two systems can coexist. Tamil Nadu can continue to run its own schools and follow its own syllabus, while Navodaya schools can provide an additional option." },
       { kind: "p", text: "Tamil Nadu, however, has maintained that the issue is not merely about adding another category of school. Its objection is tied to the language model attached to those schools and to the larger question of the state’s educational autonomy." },
       { kind: "p", text: "The latest Supreme Court intervention may have changed the immediate equation, but it has not resolved the underlying disagreement. Tamil Nadu remains committed to its two-language policy, and the new government has made it clear that this remains part of its broader position on education and language." },

@@ -873,7 +873,8 @@ section.nv-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
 @media (max-width: 720px) { .nv-map-wrap { grid-template-columns: 1fr; } }
 
 /* ---------- two languages, or three ---------- */
-.nv-lang { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1rem, 3vw, 2.2rem); width: 100%; }
+.nv-lang { display: grid; grid-template-columns: 1fr auto 1fr; align-items: stretch; gap: clamp(0.8rem, 2.4vw, 2rem); width: 100%; }
+.nv-lang-vs { align-self: center; font-family: ${f.display}; font-weight: 800; font-size: clamp(1.1rem, 2.4vw, 1.8rem); text-transform: uppercase; letter-spacing: 0.02em; color: ${c.onDarkFaint}; }
 .nv-lang-col { background: ${c.paperPanel}; border: 1px solid ${c.line}; border-radius: var(--nv-r); padding: clamp(1.1rem, 2.6vw, 1.8rem); }
 .nv-lang-col:last-child { border-color: ${c.clay}; }
 .nv-lang-name { font-family: ${f.display}; font-weight: 500; font-size: clamp(1.3rem, 2.4vw, 2rem); letter-spacing: -0.01em; color: ${c.greenInk}; margin: 0; }
@@ -888,7 +889,7 @@ section.nv-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
 .nv-chip b { font-family: ${f.tamil}; font-weight: 500; font-size: 0.9em; color: ${c.clay}; }
 .nv-chip--english { background: ${c.leafSoft}; }
 .nv-chip--third { background: ${c.claySoft}; color: ${c.clay}; }
-@media (max-width: 620px) { .nv-lang { grid-template-columns: 1fr; } }
+@media (max-width: 620px) { .nv-lang { grid-template-columns: 1fr; } .nv-lang-vs { justify-self: start; padding: 0.2rem 0; } }
 
 /* ---------- timeline ---------- */
 .nv-tl { position: relative; list-style: none; margin: 0; padding: 0.4rem 0 0.4rem 2.4rem; display: grid; gap: clamp(1.4rem, 4vh, 2.6rem); }
@@ -898,7 +899,8 @@ section.nv-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
 .nv-tl-node.is-on, .nv-tl-node.is-past { opacity: 1; }
 .nv-tl-dot { position: absolute; left: -2.4rem; top: 0.35rem; width: 12px; height: 12px; border-radius: 999px; background: ${c.ink}; border: 2px solid ${c.onDarkLine}; }
 .nv-tl-node.is-on .nv-tl-dot, .nv-tl-node.is-past .nv-tl-dot { background: ${c.clay}; border-color: ${c.clay}; box-shadow: 0 0 0 5px rgba(184, 70, 31, 0.2); }
-.nv-tl-year { display: block; font-family: ${f.display}; font-weight: 800; font-size: clamp(1.8rem, 3.4vw, 3rem); line-height: 1; letter-spacing: -0.02em; color: ${c.onDark}; }
+.nv-tl-year { display: block; font-family: ${f.display}; font-weight: 800; font-size: clamp(1.8rem, 3.4vw, 3rem); line-height: 1; letter-spacing: -0.02em; color: ${c.onDark}; transition: color var(--mo-normal, 450ms) var(--ease-std, ease), transform var(--mo-normal, 450ms) var(--ease-std, ease); transform-origin: left; }
+.nv-tl-node.is-on .nv-tl-year { color: ${c.clay}; transform: scale(1.12); }
 .nv-tl-label { display: block; font-family: ${f.sans}; font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; color: ${c.onDarkFaint}; margin-top: 0.3rem; }
 
 /* ---------- three questions: the ones left open ---------- */
@@ -938,4 +940,40 @@ section.nv-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
   .rail { scroll-snap-type: none; }
   .nv-rise.is-in .nv-shot { animation: none; }
 }
+
+/* ---------- cinematic question sequence (closing) ---------- */
+.nv-prose > .nv-qseq { width: 100vw; max-width: none; margin-inline: calc(50% - 50vw); }
+.nv-qseq { position: relative; }
+.nv-qseq-stage {
+  position: sticky; top: 0; height: 100svh;
+  display: grid; align-content: center; gap: clamp(1.5rem, 4vh, 2.6rem);
+  padding-inline: var(--nv-gutter);
+}
+.nv-qseq-kicker { font-family: ${f.sans}; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: ${c.onDarkAccent}; margin: 0; }
+.nv-qseq-frame { display: grid; }
+.nv-qseq-q {
+  grid-area: 1 / 1; margin: 0; max-width: 22ch;
+  font-family: ${f.display}; font-weight: 800; text-transform: uppercase;
+  font-size: clamp(2rem, 5.5vw, 4.6rem); line-height: 1.02; letter-spacing: -0.03em;
+  color: ${c.onDark};
+  opacity: 0; transform: translateY(30px);
+  transition: opacity var(--mo-editorial, 700ms) var(--ease-std, ease), transform var(--mo-editorial, 700ms) var(--ease-std, ease);
+}
+.nv-qseq-q.is-on { opacity: 1; transform: none; }
+.nv-qseq-q.is-past { opacity: 0; transform: translateY(-30px); }
+.nv-qseq-count { font-family: ${f.sans}; font-size: 0.9rem; font-weight: 600; letter-spacing: 0.16em; color: ${c.clay}; font-variant-numeric: tabular-nums; }
+.nv-qseq-step { display: block; height: 100svh; }
+
+/* ---------- three-axis diagram (Is this about Hindi?) ---------- */
+.nv-axis { display: grid; justify-items: center; }
+.nv-axis-svg { width: 100%; max-width: 40rem; height: auto; display: block; margin-inline: auto; }
+.nv-axis-label { font-family: ${f.sans}; font-weight: 600; font-size: 26px; letter-spacing: 0.12em; fill: ${c.onDark}; }
+.nv-axis-center { font-family: ${f.display}; font-weight: 800; font-size: 30px; letter-spacing: 0.02em; text-transform: uppercase; fill: ${c.clay}; }
+
+/* ---------- Supreme Court intervention beats ---------- */
+.nv-court-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+.nv-court-beat { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: baseline; gap: 1.2rem; padding: clamp(1.4rem, 4vh, 2.6rem) 0; border-top: 1px solid ${c.onDarkLine}; }
+.nv-court-beat:last-child { border-bottom: 1px solid ${c.onDarkLine}; }
+.nv-court-n { font-family: ${f.sans}; font-size: 0.9rem; font-weight: 600; letter-spacing: 0.14em; color: ${c.onDarkFaint}; font-variant-numeric: tabular-nums; }
+.nv-court-big { font-family: ${f.display}; font-weight: 800; text-transform: uppercase; font-size: clamp(2rem, 5.5vw, 4.4rem); line-height: 1; letter-spacing: -0.03em; color: ${c.clay}; }
 `;

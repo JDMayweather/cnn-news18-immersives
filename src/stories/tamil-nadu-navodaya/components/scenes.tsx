@@ -55,8 +55,9 @@ export function LanguageScene({ active }: { active: number }): React.JSX.Element
   const revealed = Math.min(active + 1, 2); /* rows 6–8, then 9–10 */
   const thirdOn = active >= 2;
   return (
-    <div className="nv-lang">
+    <div className={`nv-lang${thirdOn ? " nv-lang--third" : ""}`}>
       <Column name="Tamil Nadu" tag="Two languages" rows={TN_ROWS} revealed={revealed} thirdOn={false} />
+      <span className="nv-lang-vs" aria-hidden="true">vs</span>
       <Column name="Navodaya" tag="Three languages" rows={NV_ROWS} revealed={revealed} thirdOn={thirdOn} />
     </div>
   );

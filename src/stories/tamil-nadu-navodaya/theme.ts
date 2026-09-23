@@ -19,6 +19,8 @@
  *      ochre/vermilion = the Tamil accent, the lone exception, emphasis
  */
 
+import { MOTION_CSS_VARS } from "@/motion/tokens";
+
 export const theme = {
   colors: {
     /* paper: a warm document stock — a dossier page, not newsprint. */
@@ -126,6 +128,7 @@ export const globalCss = `
   --nv-gutter: ${theme.space.gutter};
   --nv-r: ${theme.radius.panel};
   --nv-r-sm: ${theme.radius.small};
+  ${MOTION_CSS_VARS}
   position: relative;
   background: ${theme.colors.ink};
   color: ${theme.colors.onDark};
