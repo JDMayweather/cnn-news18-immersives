@@ -19,16 +19,46 @@ const TN = { cx: 168, cy: 430 };
 
 export function LoneMap(): React.JSX.Element {
   const [open, setOpen] = useState(false);
+  const [dots, setDots] = useState<{ x: number; y: number }[]>([]);
+  const pathRef = useRef<SVGPathElement>(null);
   const ref = useScene<HTMLDivElement>((root) => {
     drawPaths(root, ".nv-map-draw", { stagger: 0.06, scrub: true });
   });
+
+  /* Populate the map with Navodaya dots placed *inside* the outline — points
+     are hit-tested against the path itself (isPointInFill), so nothing ever
+     strays off the landmass. Tamil Nadu's region is left clear so its ochre
+     mark reads as the lone exception. */
+  useEffect(() => {
+    const path = pathRef.current;
+    if (!path || typeof path.isPointInFill !== "function") return;
+    const svg = path.ownerSVGElement;
+    if (!svg) return;
+    const pt = svg.createSVGPoint();
+    const inside: { x: number; y: number }[] = [];
+    for (let x = 30; x <= 440; x += 19) {
+      for (let y = 55; y <= 465; y += 19) {
+        pt.x = x;
+        pt.y = y;
+        if (path.isPointInFill(pt) && Math.hypot(x - TN.cx, y - TN.cy) > 48) {
+          inside.push({ x, y });
+        }
+      }
+    }
+    const step = Math.max(1, Math.ceil(inside.length / 42));
+    setDots(inside.filter((_, i) => i % step === 0));
+  }, []);
+
   return (
     <div className="nv-fig nv-map-fig" ref={ref}>
       <p className="nv-fig-label">The lone exception</p>
       <div className="nv-map-wrap">
         <div className="nv-map-stage">
           <svg className="nv-map" viewBox="0 0 460 520" role="img" aria-label="A map of India. Every other state has Jawahar Navodaya Vidyalayas; Tamil Nadu, in the south, is the sole state that has not accepted the scheme.">
-            <path className="nv-map-draw" pathLength={1} d={INDIA_OUTLINE} fill="#3a4568" stroke={theme.colors.leafMid} strokeWidth={1.6} strokeLinejoin="round" />
+            <path ref={pathRef} className="nv-map-draw" pathLength={1} d={INDIA_OUTLINE} fill="#3a4568" stroke={theme.colors.leafMid} strokeWidth={1.6} strokeLinejoin="round" />
+            {dots.map((d, i) => (
+              <circle key={i} className="nv-map-dot" style={{ ["--i" as string]: i }} cx={d.x} cy={d.y} r={3.4} fill={theme.colors.onDark} />
+            ))}
             <circle cx={TN.cx} cy={TN.cy} r={30} fill={theme.colors.clay} opacity={0.14} />
             <circle className="nv-map-pulse" cx={TN.cx} cy={TN.cy} r={14} fill="none" stroke={theme.colors.clay} strokeWidth={2} />
             <circle

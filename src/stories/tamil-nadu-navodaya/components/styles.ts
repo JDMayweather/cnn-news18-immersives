@@ -856,6 +856,9 @@ section.nv-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
 .nv-map-stage { position: relative; }
 .nv-map { width: 100%; height: auto; display: block; max-width: 21rem; margin-inline: auto; }
 .nv-map-pulse { animation: nv-pulse 2.8s ${motion.soft} infinite; transform-origin: center; transform-box: fill-box; }
+/* Navodaya dots populate the map, staggered. */
+.nv-map-dot { opacity: 0; transform-origin: center; transform-box: fill-box; animation: nv-dot-in var(--mo-normal, 450ms) var(--ease-std, ease) forwards; animation-delay: calc(var(--i, 0) * 24ms); }
+@keyframes nv-dot-in { from { opacity: 0; transform: scale(0); } to { opacity: 0.85; transform: scale(1); } }
 @keyframes nv-pulse { 0% { transform: scale(1); opacity: 0.85; } 70% { transform: scale(2.3); opacity: 0; } 100% { opacity: 0; } }
 .nv-map-tn { cursor: pointer; transition: r 0.2s ${motion.ease}; }
 .nv-map-tn:hover, .nv-map-tn:focus-visible { outline: none; }
@@ -920,6 +923,7 @@ section.nv-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
 /* ---------- reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
   .nv-map-pulse { animation: none; }
+  .nv-map-dot { animation: none; opacity: 0.85; transform: none; }
   .band-cell, .fact-row, .merit-pairs > div, .slip { transition: none; }
   .th-arc { transition: none; }
   .nv-panel img { animation: none; transform: none; }
