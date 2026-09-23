@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { useScene, drawPaths } from "./motion";
 import { theme } from "../theme";
-import { THREE_QUESTIONS, SHOTS, type FigureRef } from "../assets/article";
+import { THREE_QUESTIONS, SHOTS, IMAGE_CREDITS, type FigureRef } from "../assets/article";
 
 /**
  * Figures, restricted to what the article states: the map that shows Tamil
@@ -229,10 +229,10 @@ export function ThreeAxis(): React.JSX.Element {
  * the word "dialogue" are the article's own. The verbatim paragraph still runs
  * above this, unchanged. Reduced-motion / embed fall back to a plain list.
  */
-const COURT_STEPS: { kicker: string; big: string; sub?: string }[] = [
-  { kicker: "17 September 2026", big: "The Supreme Court has entered the dispute." },
-  { kicker: "The order stands", big: "Three months", sub: "The state was given more time to comply." },
-  { kicker: "The instruction", big: "Dialogue", sub: "The Court urged the two sides to resolve their differences." },
+const COURT_STEPS: { tag: string; kicker: string; big: string; sub?: string; img: string; credit: string }[] = [
+  { tag: "The Court", kicker: "17 September 2026", big: "The Supreme Court has entered the dispute.", img: SHOTS.scInterior, credit: IMAGE_CREDITS.scInterior },
+  { tag: "The order", kicker: "The direction stands", big: "Three months", sub: "The state was given more time to comply.", img: SHOTS.tamilScript, credit: IMAGE_CREDITS.tamilScript },
+  { tag: "The instruction", kicker: "To both sides", big: "Dialogue", sub: "The Court urged the two sides to resolve their differences.", img: SHOTS.dravidian, credit: IMAGE_CREDITS.dravidian },
 ];
 
 export function CourtScene(): React.JSX.Element {
@@ -282,23 +282,40 @@ export function CourtScene(): React.JSX.Element {
   return (
     <div className="nv-court-cine" role="group" aria-label="The Supreme Court intervenes">
       <div className="nv-court-stage">
-        <img
-          className={`nv-court-img${active >= 0 ? " is-on" : ""}`}
-          src={SHOTS.supremeCourt}
-          alt=""
-          aria-hidden="true"
-          loading="lazy"
-          decoding="async"
-        />
+        {COURT_STEPS.map((s, i) => (
+          <img
+            key={i}
+            className={`nv-court-img${i === active ? " is-on" : ""}`}
+            src={s.img}
+            alt=""
+            aria-hidden="true"
+            loading="lazy"
+            decoding="async"
+          />
+        ))}
         <span className="nv-court-veil" aria-hidden="true" />
+        <span className="nv-court-plate" aria-hidden="true" />
+        <span className="nv-court-year" aria-hidden="true">2026</span>
+        <span className="nv-court-label" aria-hidden="true">The Court intervenes</span>
+        <span className="nv-court-side" aria-hidden="true">§ 06 · Supreme Court</span>
         <div className="nv-court-frame">
           {COURT_STEPS.map((s, i) => (
             <div key={i} className={`nv-court-cine-beat${i === active ? " is-on" : i < active ? " is-past" : ""}`}>
+              <span className="nv-court-tag">{s.tag}</span>
               <span className="nv-court-kicker">{s.kicker}</span>
               <span className="nv-court-cine-big">{s.big}</span>
               {s.sub && <span className="nv-court-cine-sub">{s.sub}</span>}
             </div>
           ))}
+        </div>
+        <div className="nv-court-foot">
+          <span className="nv-court-credit">{COURT_STEPS[active]?.credit}</span>
+          <span className="nv-court-rail" aria-hidden="true">
+            {COURT_STEPS.map((_, i) => (
+              <span key={i} className={`nv-court-tick${i === active ? " is-on" : i < active ? " is-past" : ""}`} />
+            ))}
+            <span className="nv-court-index">{String(active + 1).padStart(2, "0")} / {String(COURT_STEPS.length).padStart(2, "0")}</span>
+          </span>
         </div>
       </div>
       <div className="nv-court-track" aria-hidden="true">

@@ -51,6 +51,11 @@ export const IMAGE_CREDITS: Record<string, string> = {
   madrasHC: "The Madras High Court, Chennai. (Image Courtesy: TuckDB/Wikimedia Commons, CC BY 4.0)",
   martyrs: "The memorial to the martyrs of the anti-Hindi language agitations, Tamil Nadu. (Image Courtesy: Surya Prakash S.A./Wikimedia Commons, CC BY-SA 3.0)",
   assembly: "The Tamil Nadu Legislative Assembly–Secretariat complex, Chennai. (Image Courtesy: Prateek Karandikar/Wikimedia Commons, CC BY-SA 4.0)",
+  scInterior: "Inside the Supreme Court of India. (Image Courtesy: Pinakpani/Wikimedia Commons, CC BY-SA 4.0)",
+  parliament: "A joint session of the Parliament of India, New Delhi. (Image Courtesy: The White House/Wikimedia Commons, Public domain)",
+  secretariat: "The Tamil Nadu Secretariat, Chennai. (Image Courtesy: 12afser12/Wikimedia Commons, CC BY-SA 3.0)",
+  tamilScript: "The evolution of the Tamil script, Dakshinachitra. (Image Courtesy: brad.coy/Wikimedia Commons, CC BY 2.0)",
+  dravidian: "C. N. Annadurai and E. V. Ramasami, figures of the Dravidian movement. (Image Courtesy: Wikimedia Commons, Public domain)",
 };
 
 export const SHOTS = {
@@ -60,6 +65,11 @@ export const SHOTS = {
   madrasHC: "https://commons.wikimedia.org/wiki/Special:FilePath/Madras%20High%20Court%2C%20Chennai.jpg?width=1600",
   martyrs: "https://commons.wikimedia.org/wiki/Special:FilePath/Mozhip%20por%20Thiyaagigal%20mandabam%202.JPG?width=1600",
   assembly: "https://commons.wikimedia.org/wiki/Special:FilePath/Tamil%20Nadu%20legislative%20assembly-secretariat%20complex%20as%20seen%20from%20Chennai%20MRTS.JPG?width=1600",
+  scInterior: "https://commons.wikimedia.org/wiki/Special:FilePath/Inside%20the%20Supreme%20Court%20of%20India.%2002.jpg?width=1600",
+  parliament: "https://commons.wikimedia.org/wiki/Special:FilePath/Barack%20Obama%20at%20Parliament%20of%20India%20in%20New%20Delhi%20addressing%20Joint%20session%20of%20both%20houses%202010.jpg?width=1600",
+  secretariat: "https://commons.wikimedia.org/wiki/Special:FilePath/Tamil%20Nadu%20Secretariat.jpg?width=1600",
+  tamilScript: "https://commons.wikimedia.org/wiki/Special:FilePath/01History%20Tamil%20Script%20by%20Centuries%20Dakshinchitra%20Mamallapuram%202011.jpg?width=1600",
+  dravidian: "https://commons.wikimedia.org/wiki/Special:FilePath/C.%20N.%20Annadurai%20and%20E.%20V.%20Ramasami.JPG?width=1600",
 } as const;
 
 /* Scene steps: drawn from sentences the article already contains. */

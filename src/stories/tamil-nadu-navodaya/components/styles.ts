@@ -993,8 +993,23 @@ section.nv-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
 .nv-court-cine-beat.is-on { opacity: 1; transform: none; }
 .nv-court-cine-beat.is-past { opacity: 0; transform: translateY(-28px); }
 .nv-court-kicker { font-family: ${f.sans}; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: ${c.onDarkAccent}; }
-.nv-court-cine-big { font-family: ${f.display}; font-weight: 800; text-transform: uppercase; font-size: clamp(2.2rem, 6vw, 5rem); line-height: 1; letter-spacing: -0.03em; color: ${c.onDark}; }
+.nv-court-cine-big { font-family: ${f.display}; font-weight: 800; text-transform: uppercase; font-size: clamp(1.6rem, 4vw, 3.2rem); line-height: 1.05; letter-spacing: -0.02em; color: ${c.onDark}; }
 .nv-court-cine-sub { font-family: ${f.serif}; font-weight: 400; font-size: clamp(1rem, 1.6vw, 1.3rem); line-height: 1.5; color: ${c.onDarkDim}; }
+/* Scene chrome: a corner label, an on-screen image credit, and a step rail. */
+.nv-court-label { position: absolute; top: clamp(1.4rem, 4vh, 2.6rem); left: var(--nv-gutter); z-index: 2; font-family: ${f.sans}; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: ${c.onDarkAccent}; }
+.nv-court-foot { position: absolute; left: var(--nv-gutter); right: var(--nv-gutter); bottom: clamp(1.2rem, 3.5vh, 2.4rem); z-index: 2; display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 0.8rem 1.5rem; }
+.nv-court-credit { font-family: ${f.sans}; font-size: 0.72rem; line-height: 1.5; letter-spacing: 0.02em; color: ${c.onDarkFaint}; max-width: 46ch; }
+.nv-court-rail { display: inline-flex; align-items: center; gap: 8px; }
+.nv-court-tick { width: 26px; height: 2px; background: ${c.onDarkLine}; transition: background var(--mo-normal, 450ms) var(--ease-std, ease); }
+.nv-court-tick.is-on, .nv-court-tick.is-past { background: ${c.clay}; }
+.nv-court-index { font-family: ${f.sans}; font-size: 0.74rem; font-weight: 600; letter-spacing: 0.14em; color: ${c.onDarkDim}; font-variant-numeric: tabular-nums; margin-left: 6px; }
+/* Depth + framing elements: a ghost year, an inset plate, a per-beat tag, and a
+   vertical section marker — so the scene reads as a composed frame, not one line. */
+.nv-court-year { position: absolute; right: clamp(1rem, 4vw, 4rem); top: 50%; transform: translateY(-50%); z-index: 0; font-family: ${f.display}; font-weight: 800; font-size: clamp(9rem, 34vw, 30rem); line-height: 1; letter-spacing: -0.04em; color: ${c.onDark}; opacity: 0.05; pointer-events: none; font-variant-numeric: tabular-nums; }
+.nv-court-plate { position: absolute; inset: clamp(1rem, 3vh, 2rem) clamp(1rem, 3vw, 2.4rem); z-index: 1; border: 1px solid ${c.onDarkLine}; pointer-events: none; }
+.nv-court-side { position: absolute; right: clamp(0.8rem, 2.4vw, 1.8rem); top: 50%; z-index: 2; transform: translateY(-50%) rotate(90deg); transform-origin: right center; font-family: ${f.sans}; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.24em; text-transform: uppercase; color: ${c.onDarkFaint}; white-space: nowrap; }
+.nv-court-tag { display: inline-block; align-self: start; font-family: ${f.sans}; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: ${c.onDark}; background: ${c.clay}; padding: 0.28rem 0.6rem; }
+@media (max-width: 620px) { .nv-court-side { display: none; } .nv-court-plate { inset: 0.7rem; } }
 .nv-court-step { display: block; height: 100svh; }
 
 /* ---------- cold open: a full-screen bridge from hero to the story ---------- */
