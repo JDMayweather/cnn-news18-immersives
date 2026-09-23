@@ -84,7 +84,7 @@ export function TimelineScene({ active }: { active: number }): React.JSX.Element
           </li>
         );
       })}
-      <span className="nv-tl-spine" style={{ ["--fill" as string]: `${(Math.min(active, NODES.length - 1) / (NODES.length - 1)) * 100}%` }} />
+      <span className="nv-tl-spine" style={{ ["--fill-n" as string]: `${Math.min(active, NODES.length - 1) / (NODES.length - 1)}` }} />
     </ol>
   );
 }

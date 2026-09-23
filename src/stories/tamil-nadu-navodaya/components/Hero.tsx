@@ -1,5 +1,7 @@
+import { useEffect } from "react";
 import gsap from "gsap";
 import { useScene } from "./motion";
+import { prefersReducedMotion } from "@/core/responsive/viewport";
 import { META, SHOTS, IMAGE_CREDITS } from "../assets/article";
 
 /**
@@ -14,10 +16,27 @@ export default function Hero(): React.JSX.Element {
       .from(root.querySelectorAll(".h-fade"), { opacity: 0, y: 18, duration: 0.95, stagger: 0.1 }, 0.4);
   });
 
+  /* A soft ochre spotlight follows the cursor over the photograph — a quiet
+     depth cue, pointer-fine only and never under reduced motion. */
+  useEffect(() => {
+    if (typeof window === "undefined" || prefersReducedMotion()) return;
+    if (typeof matchMedia !== "function" || !matchMedia("(pointer: fine)").matches) return;
+    const el = ref.current;
+    if (!el) return;
+    const move = (e: PointerEvent): void => {
+      const r = el.getBoundingClientRect();
+      el.style.setProperty("--mx", `${((e.clientX - r.left) / r.width) * 100}%`);
+      el.style.setProperty("--my", `${((e.clientY - r.top) / r.height) * 100}%`);
+    };
+    el.addEventListener("pointermove", move);
+    return () => el.removeEventListener("pointermove", move);
+  }, [ref]);
+
   return (
     <header className="hero" ref={ref}>
       <img className="hero-video" src={SHOTS.supremeCourt} alt="" aria-hidden="true" loading="eager" decoding="async" />
       <div className="hero-scrim" aria-hidden="true" />
+      <div className="hero-glow" aria-hidden="true" />
 
       <div className="nv-wrap hero-grid">
         <div className="hero-copy">

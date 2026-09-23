@@ -350,3 +350,286 @@
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* ============================================================
+   Preloader — a newswire "incoming" intro: headlines cycle while
+   the counter climbs, then an interlocking column curtain parts.
+   ============================================================ */
+.preloader { position: fixed; inset: 0; z-index: 9999; background: transparent; display: grid; place-items: center; overflow: hidden; }
+.preloader-cols { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(7, 1fr); }
+.preloader-col { background: var(--dark); }
+/* Interlocking teeth: even columns retract upward, odd downward. */
+.preloader-col:nth-child(even) { transform-origin: top; }
+.preloader-col:nth-child(odd) { transform-origin: bottom; }
+.preloader.is-leaving .preloader-col {
+  animation: pre-lift 0.9s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+  animation-delay: calc(var(--i) * 0.055s);
+}
+@keyframes pre-lift { to { transform: scaleY(0); } }
+.preloader-inner {
+  position: relative; z-index: 1;
+  display: grid; justify-items: center; gap: 14px; color: #fff; text-align: center; width: min(92vw, 60rem);
+  transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.76, 0, 0.24, 1);
+}
+.preloader.is-leaving .preloader-inner { opacity: 0; transform: translateY(-18px); }
+.preloader-brand { font-weight: 700; letter-spacing: 0.34em; font-size: 0.72rem; color: rgba(255, 255, 255, 0.6); text-transform: uppercase; }
+.preloader-brand b { color: #fff; font-weight: 900; letter-spacing: 0.02em; }
+.preloader-count {
+  font-weight: 900; font-size: clamp(5rem, 20vw, 15rem); line-height: 0.9; letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+  /* Outlined numerals that fill toward red as they climb. */
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.35);
+  background: linear-gradient(180deg, var(--n18-red), var(--n18-red)) no-repeat;
+  background-size: 100% calc(var(--count-fill, 0%) );
+  background-position: 0 100%;
+  -webkit-background-clip: text; background-clip: text;
+}
+/* A live newswire line under the counter. */
+.preloader-wire {
+  display: inline-flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: center;
+  font-family: "Inter", monospace; font-weight: 700; font-size: 0.72rem; letter-spacing: 0.18em;
+  color: var(--n18-red); text-transform: uppercase; min-height: 1.2em;
+}
+.preloader-live { width: 9px; height: 9px; border-radius: 50%; background: var(--n18-red); animation: pre-blink 0.9s steps(1) infinite; }
+@keyframes pre-blink { 50% { opacity: 0.15; } }
+.preloader-wire-title { color: rgba(255, 255, 255, 0.82); font-weight: 600; letter-spacing: 0.06em; max-width: 40ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* A scan line sweeping down the overlay. */
+.preloader-scan { position: absolute; left: 0; right: 0; top: 0; height: 2px; z-index: 2; background: linear-gradient(90deg, transparent, rgba(227, 30, 36, 0.7), transparent); animation: pre-scan 2.2s cubic-bezier(0.5, 0, 0.5, 1) infinite; }
+@keyframes pre-scan { 0% { transform: translateY(0); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(100vh); opacity: 0; } }
+.preloader.is-leaving .preloader-scan { display: none; }
+
+/* ============================================================
+   Interaction layer — hover zoom, title wipe, load stagger.
+   ============================================================ */
+.card-media, .lead-media, .rail-thumb, .cover-play { overflow: hidden; }
+.card-art { transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), filter 0.6s ease; }
+.card-link:hover .card-art,
+.lead-card:hover .card-art,
+.rail-item:hover .card-art { transform: scale(1.06); }
+
+/* Animated underline that wipes in under card / lead / rail titles. */
+.card-title, .lead-title, .rail-title {
+  background-image: linear-gradient(var(--n18-red), var(--n18-red));
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 2px;
+  transition: background-size 0.4s cubic-bezier(0.22, 1, 0.36, 1), color 0.2s ease;
+  padding-bottom: 2px;
+}
+.card-link:hover .card-title,
+.lead-card:hover .lead-title,
+.rail-item:hover .rail-title { background-size: 100% 2px; }
+
+/* Cards rise in on first paint, staggered. */
+.grid .card { opacity: 0; transform: translateY(20px); animation: card-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+.grid .card:nth-child(1) { animation-delay: 0.04s; }
+.grid .card:nth-child(2) { animation-delay: 0.1s; }
+.grid .card:nth-child(3) { animation-delay: 0.16s; }
+.grid .card:nth-child(4) { animation-delay: 0.22s; }
+.grid .card:nth-child(5) { animation-delay: 0.28s; }
+.grid .card:nth-child(6) { animation-delay: 0.34s; }
+.grid .card:nth-child(n+7) { animation-delay: 0.4s; }
+@keyframes card-in { to { opacity: 1; transform: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .grid .card { opacity: 1; transform: none; animation: none; }
+  .preloader-col { animation: none !important; }
+}
+
+/* ============================================================
+   OVERHAUL — dark cinematic editorial theme + full-bleed lead.
+   Redefines the palette tokens on .home-page so the whole page
+   flips to a dark ground; surfaces that hardcoded white are
+   re-skinned below.
+   ============================================================ */
+.home-page {
+  --paper: #0b0c0f;
+  --paper-2: #15171d;
+  --ink: #f3f4f6;
+  --ink-2: #b7bdc7;
+  --ink-3: #868d99;
+  --line: rgba(255, 255, 255, 0.12);
+  --dark: #060708;
+  background: var(--paper);
+}
+.home-page { color: var(--ink); }
+
+/* Masthead / nav on dark */
+.masthead { background: var(--paper); border-bottom-color: var(--line); }
+.brand-name { color: var(--ink); }
+.section-nav { background: var(--paper); border-top-color: var(--line); }
+.section-link { color: var(--ink-2); }
+
+/* Ticker on dark */
+.ticker { background: #17090b; border-bottom-color: var(--line); }
+.ticker-item { color: var(--ink-2); }
+
+/* Cards, chips, tags, share, covers re-skinned for dark */
+.card { background: var(--paper-2); border-color: var(--line); }
+.card:hover { box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5); border-color: rgba(255, 255, 255, 0.22); }
+.card-media, .card-art--fallback, .cover-play, .lead-media, .rail-thumb { background: #101216; }
+.tag { background: rgba(255, 255, 255, 0.05); border-color: var(--line); color: var(--ink-2); }
+.chip { background: transparent; color: var(--ink-2); }
+.chip:hover { color: #fff; }
+.share-btn { background: rgba(255, 255, 255, 0.05); border-color: var(--line); color: var(--ink-2); }
+.section-head { border-bottom-color: rgba(255, 255, 255, 0.22); }
+
+/* ---------- Full-bleed cinematic lead ---------- */
+.site-main { padding: 0; }
+.lead-hero {
+  position: relative;
+  width: 100%;
+  min-height: min(86vh, 780px);
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  background: #060708;
+  margin-bottom: clamp(2rem, 5vw, 3.5rem);
+}
+.lead-hero-media { position: absolute; inset: 0; z-index: 0; }
+.lead-hero-media .card-art { width: 100%; height: 100%; object-fit: cover; }
+/* The lead cover often ships as a click-to-play video button; let it fill. */
+.lead-hero-media .cover-play { position: absolute; inset: 0; }
+.lead-hero-scrim {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background:
+    radial-gradient(120% 90% at 80% 6%, rgba(227, 30, 36, 0.22), transparent 55%),
+    linear-gradient(180deg, rgba(6, 7, 8, 0.15) 0%, rgba(6, 7, 8, 0.35) 45%, rgba(6, 7, 8, 0.92) 100%);
+}
+.lead-hero-inner { position: relative; z-index: 2; width: 100%; padding-top: clamp(3rem, 10vh, 7rem); padding-bottom: clamp(1.8rem, 5vh, 3rem); }
+.lead-hero-copy { display: block; text-decoration: none; color: #fff; max-width: 60rem; }
+.lead-hero-title {
+  font-weight: 900;
+  font-size: clamp(2.2rem, 6vw, 5rem);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  margin: 0.6rem 0 0.8rem;
+  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.5);
+  background-image: linear-gradient(var(--n18-red), var(--n18-red));
+  background-repeat: no-repeat; background-position: 0 100%; background-size: 0% 3px;
+  transition: background-size 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  padding-bottom: 4px;
+}
+.lead-hero-copy:hover .lead-hero-title { background-size: 100% 3px; }
+.lead-hero-dek { font-size: clamp(1rem, 1.4vw, 1.3rem); line-height: 1.55; color: rgba(255, 255, 255, 0.9); margin: 0 0 1.1rem; max-width: 54ch; }
+.lead-hero-cta { display: inline-block; font-weight: 800; letter-spacing: 0.02em; color: #fff; margin-bottom: 1rem; }
+.lead-hero-cta span { color: var(--n18-red); transition: transform 0.3s ease; display: inline-block; }
+.lead-hero-copy:hover .lead-hero-cta span { transform: translateX(6px); }
+.lead-hero .byline { color: rgba(255, 255, 255, 0.7); }
+.lead-hero .byline-author { color: rgba(255, 255, 255, 0.9); }
+.lead-hero .share { margin-top: 14px; }
+/* Slow ken-burns drift on the lead image. */
+.lead-hero-media .card-art { animation: lead-drift 24s ease-in-out infinite alternate; }
+@keyframes lead-drift { from { transform: scale(1.04); } to { transform: scale(1.12); } }
+
+@media (prefers-reduced-motion: reduce) { .lead-hero-media .card-art { animation: none; } }
+@media (max-width: 640px) { .lead-hero { min-height: 78vh; } }
+
+/* ============================================================
+   OVERHAUL 2 — type-first editorial index (replaces the card
+   grid) with a cursor-following cover preview. A display serif
+   carries the titles; the list is the interface.
+   ============================================================ */
+.all { padding-top: clamp(2rem, 6vw, 4rem); padding-bottom: clamp(2rem, 6vw, 4rem); }
+.section-head h2 {
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 300; font-style: italic;
+  font-size: clamp(1.6rem, 3vw, 2.4rem); letter-spacing: -0.01em;
+}
+
+.index { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.index-row { border-bottom: 1px solid var(--line); }
+.index-link {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 3rem);
+  padding: clamp(1.4rem, 3.2vw, 2.6rem) 0.5rem;
+  text-decoration: none; color: var(--ink);
+  position: relative;
+  transition: color 0.35s ease, padding-left 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+/* A red wash sweeps in from the left on hover. */
+.index-link::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(90deg, rgba(227, 30, 36, 0.14), transparent 70%);
+  transform: scaleX(0); transform-origin: left; transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.index-link:hover::before { transform: scaleX(1); }
+.index-link:hover { padding-left: 1.4rem; }
+.index-num { font-family: "Inter", sans-serif; font-weight: 700; font-size: 0.9rem; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.index-link:hover .index-num { color: var(--n18-red); }
+.index-main { min-width: 0; }
+.index-title {
+  display: block;
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(1.5rem, 3.6vw, 3rem);
+  line-height: 1.04; letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.index-link:hover .index-title { color: #fff; }
+.index-dek {
+  display: block; margin-top: 0.5rem;
+  font-family: "Inter", sans-serif; font-size: 0.92rem; line-height: 1.5; color: var(--ink-2);
+  max-width: 56ch;
+  opacity: 0.75;
+  overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+}
+.index-meta { display: inline-flex; align-items: center; gap: 14px; font-family: "Inter", sans-serif; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); white-space: nowrap; }
+.index-tag { color: var(--n18-red); }
+.index-go { font-size: 1.2rem; transform: translateX(-6px); opacity: 0; transition: transform 0.35s ease, opacity 0.35s ease; color: var(--n18-red); }
+.index-link:hover .index-go { transform: none; opacity: 1; }
+
+/* Floating cover preview that follows the cursor across the index. */
+.index-preview {
+  position: fixed; top: 0; left: 0; z-index: 40;
+  width: 300px; aspect-ratio: 16 / 10;
+  border-radius: 8px; overflow: hidden;
+  pointer-events: none;
+  opacity: 0; scale: 0.9;
+  transition: opacity 0.3s ease, scale 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+  will-change: transform;
+}
+.index-preview.is-on { opacity: 1; scale: 1; }
+.index-preview .card-art { width: 100%; height: 100%; object-fit: cover; }
+@media (hover: none), (pointer: coarse) { .index-preview { display: none; } }
+
+@media (max-width: 640px) {
+  .index-link { grid-template-columns: 2.4rem minmax(0, 1fr); gap: 0.8rem; }
+  .index-meta { grid-column: 2; margin-top: 0.6rem; }
+  .index-dek { -webkit-line-clamp: 3; }
+}
+
+/* ============================================================
+   OVERHAUL 3 — awwwards layer: grain, kinetic ribbon, index
+   scroll-reveal.
+   ============================================================ */
+/* Fine paper grain over the whole dark page for texture. */
+.home-grain {
+  position: fixed; inset: 0; z-index: 30; pointer-events: none; opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.035 0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: screen;
+}
+
+/* Kinetic editorial ribbon between the lead and the index. */
+.ribbon { overflow: hidden; border-block: 1px solid var(--line); background: var(--n18-red); }
+.ribbon-track { display: inline-flex; white-space: nowrap; animation: ribbon 26s linear infinite; }
+.ribbon-group { display: inline-flex; align-items: center; }
+.ribbon-group > span { font-family: "Inter", system-ui, sans-serif; font-style: normal; font-weight: 900; text-transform: uppercase; letter-spacing: -0.01em; font-size: clamp(1rem, 2.4vw, 1.9rem); color: #fff; padding: 0.5rem clamp(1rem, 2.2vw, 1.8rem); }
+.ribbon-dot { font-weight: 900 !important; opacity: 0.85; font-size: 0.7em !important; }
+@keyframes ribbon { to { transform: translateX(-50%); } }
+.ribbon:hover .ribbon-track { animation-play-state: paused; }
+
+/* Index rows rise + unmask as they enter (JS-gated so no-JS shows them). */
+.index-row { overflow: hidden; }
+html.js .index-row .index-link { opacity: 0; transform: translateY(40px); transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1); }
+html.js .index-row.is-in .index-link { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ribbon-track { animation: none; }
+  .home-grain { display: none; }
+  .index-row .index-link { opacity: 1; transform: none; transition: none; }
+}

@@ -76,7 +76,6 @@ section.nv-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
   margin: clamp(2.6rem, 7vh, 4.5rem) 0;
   background: #0d1424;
   border: 1px solid ${c.onDarkLine};
-  border-left: 4px solid ${c.clay};
   border-radius: 0;
   overflow: hidden;
 }
@@ -258,6 +257,11 @@ section.nv-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
     linear-gradient(180deg, rgba(10, 15, 26, 0.82) 0%, rgba(10, 15, 26, 0.4) 34%, rgba(10, 15, 26, 0.66) 72%, rgba(10, 15, 26, 0.92) 100%),
     radial-gradient(125% 85% at 16% 58%, rgba(10, 15, 26, 0.62) 0%, rgba(10, 15, 26, 0.18) 60%, rgba(10, 15, 26, 0) 100%);
 }
+/* Cursor spotlight over the photograph (awwwards-style mouse effect): a soft
+   ochre glow tracking the pointer, revealed only on hover with a fine pointer. */
+.hero-glow { position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: 0; transition: opacity 0.5s ${motion.ease}; background: radial-gradient(320px circle at var(--mx, 50%) var(--my, 30%), rgba(224, 161, 95, 0.16), rgba(224, 161, 95, 0) 60%); }
+@media (hover: hover) and (pointer: fine) { .hero:hover .hero-glow { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .hero-glow { display: none; } }
 .hero-grid { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: clamp(2rem, 5vw, 4.5rem); align-items: end; width: 100%; position: relative; z-index: 2; }
 .hero-eyebrow { display: flex; align-items: center; gap: 1rem; margin: 0 0 1.5rem; flex-wrap: wrap; }
 .hero-eyebrow span { font-family: ${f.sans}; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.24em; text-transform: uppercase; color: ${c.onDarkAccent}; }
@@ -290,7 +294,7 @@ section.nv-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
 .nv-vs-langs { font-family: ${f.display}; font-weight: 500; font-size: 0.92rem; color: ${c.onDarkDim}; }
 .nv-vs-div { font-family: ${f.sans}; font-size: 0.76rem; letter-spacing: 0.12em; text-transform: uppercase; color: ${c.onDarkFaint}; }
 /* A hard-edged exhibit card, filed against the seam — not a soft glass panel. */
-.hero-fig-card { color: ${c.onDarkDim}; background: rgba(10, 15, 26, 0.72); border: 1px solid ${c.onDarkLine}; border-left: 4px solid ${c.clay}; border-radius: 0; padding: 1.4rem 1.5rem 1.6rem; box-shadow: 0 20px 50px rgba(8, 12, 24, 0.5); backdrop-filter: blur(10px); }
+.hero-fig-card { color: ${c.onDarkDim}; background: rgba(10, 15, 26, 0.72); border: 1px solid ${c.onDarkLine}; border-top: 3px solid ${c.clay}; border-radius: 0; padding: 1.4rem 1.5rem 1.6rem; box-shadow: 0 20px 50px rgba(8, 12, 24, 0.5); backdrop-filter: blur(10px); }
 .hero-fig-cap { font-family: ${f.sans}; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: ${c.onDarkAccent}; margin: 0 0 0.9rem; }
 .hero-fig-big { font-family: ${f.display}; font-weight: 800; font-size: clamp(3.4rem, 6vw, 5.5rem); line-height: 0.9; letter-spacing: -0.03em; color: ${c.onDark}; margin: 0 0 1rem; font-variant-numeric: tabular-nums; }
 .hero-fig-big span { font-family: ${f.sans}; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: ${c.onDarkFaint}; margin-left: 0.5rem; }
@@ -443,7 +447,7 @@ section.nv-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
 .nv-panel { position: relative; display: block; margin-block: clamp(2.5rem, 7vh, 4.5rem); background: ${c.ink}; overflow: hidden; min-height: min(78svh, 640px); }
 .nv-panel img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .nv-panel::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10,15,26,0.35) 0%, rgba(10,15,26,0.1) 35%, rgba(10,15,26,0.72) 100%); pointer-events: none; }
-.nv-panel-cap { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; display: grid; gap: 0.5rem; padding: clamp(1.4rem, 4vw, 3rem) var(--nv-gutter); border-left: 4px solid ${c.clay}; }
+.nv-panel-cap { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; display: grid; gap: 0.5rem; padding: clamp(1.4rem, 4vw, 3rem) var(--nv-gutter); }
 .nv-panel-line { font-family: ${f.display}; font-weight: 700; font-size: clamp(1.3rem, 3vw, 2.4rem); line-height: 1.14; letter-spacing: -0.02em; color: ${c.onDark}; text-transform: uppercase; max-width: 24ch; }
 .nv-panel-credit { font-family: ${f.sans}; font-size: 0.8rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: ${c.onDarkFaint}; }
 
@@ -501,9 +505,10 @@ section.nv-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
   margin-block: clamp(2.5rem, 6vh, 4rem);
   background: linear-gradient(180deg, rgba(10, 15, 26, 0), #0a0f1a 30%, #0a0f1a 70%, rgba(10, 15, 26, 0));
   border-top: 1px solid ${c.onDarkLine}; border-bottom: 1px solid ${c.onDarkLine};
-  border-left: 6px solid ${c.clay};
 }
-.nv-prose > blockquote.nv-quote--screen::before { content: none; }
+/* A short ochre rule sits above the statement instead of a full-height side
+   bar — an editorial mark, not a card tab. */
+.nv-prose > blockquote.nv-quote--screen::before { content: ""; display: block; width: 3rem; height: 3px; background: ${c.clay}; margin-bottom: clamp(1.2rem, 3vh, 2rem); }
 .nv-prose > blockquote.nv-quote--screen p::after { content: none; }
 .nv-prose > blockquote.nv-quote--screen > p {
   max-width: 56rem;
@@ -613,10 +618,10 @@ section.nv-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
   text-wrap: balance;
   color: ${c.onDark};
   margin-block: clamp(2rem, 6vh, 3.4rem);
-  padding-left: clamp(1.2rem, 2.5vw, 2rem);
-  border-left: 4px solid ${c.clay};
   max-width: 58rem;
 }
+/* A short ochre rule above the standout line — the recurring editorial mark. */
+.nv-prose > p.nv-solo::before { content: ""; display: block; width: 3rem; height: 3px; background: ${c.clay}; margin-bottom: 1.1rem; }
 .nv-chapter--alt .nv-open-rule { background: linear-gradient(90deg, ${c.green}, rgba(0, 0, 0, 0)); }
 .nv-rule { margin: 0 0 clamp(1.4rem, 3.6vh, 2.2rem); }
 .nv-rule > i {
@@ -856,7 +861,7 @@ section.nv-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
 .nv-map-tn:hover, .nv-map-tn:focus-visible { outline: none; }
 .nv-map-other { pointer-events: none; }
 /* Click-to-open popover, filed over the map like an evidence tag. */
-.nv-map-pop { position: absolute; left: 50%; top: 8%; transform: translate(-50%, -6px); width: min(20rem, 82%); display: grid; gap: 0.5rem; text-align: left; padding: 1rem 1.1rem; background: ${c.ink}; border: 1px solid ${c.onDarkLine}; border-left: 4px solid ${c.clay}; box-shadow: 0 20px 50px rgba(8, 12, 24, 0.55); opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.28s ${motion.ease}, transform 0.28s ${motion.ease}; cursor: pointer; z-index: 3; }
+.nv-map-pop { position: absolute; left: 50%; top: 8%; transform: translate(-50%, -6px); width: min(20rem, 82%); display: grid; gap: 0.5rem; text-align: left; padding: 1rem 1.1rem; background: ${c.ink}; border: 1px solid ${c.onDarkLine}; border-top: 3px solid ${c.clay}; box-shadow: 0 20px 50px rgba(8, 12, 24, 0.55); opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.28s ${motion.ease}, transform 0.28s ${motion.ease}; cursor: pointer; z-index: 3; }
 .nv-map-pop.is-open { opacity: 1; visibility: visible; transform: translate(-50%, 0); pointer-events: auto; }
 .nv-map-pop-tag { font-family: ${f.sans}; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: ${c.clay}; }
 .nv-map-pop-note { font-family: ${f.serif}; font-weight: 400; font-size: 1rem; line-height: 1.5; color: ${c.onDarkDim}; }
@@ -888,7 +893,7 @@ section.nv-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
 /* ---------- timeline ---------- */
 .nv-tl { position: relative; list-style: none; margin: 0; padding: 0.4rem 0 0.4rem 2.4rem; display: grid; gap: clamp(1.4rem, 4vh, 2.6rem); }
 .nv-tl-spine { position: absolute; left: 0.55rem; top: 0.5rem; bottom: 0.5rem; width: 2px; background: ${c.onDarkLine}; }
-.nv-tl-spine::after { content: ""; position: absolute; inset: 0 0 auto 0; height: var(--fill, 0%); background: ${c.clay}; transition: height 0.6s ${motion.soft}; }
+.nv-tl-spine::after { content: ""; position: absolute; inset: 0 0 0 0; transform: scaleY(var(--fill-n, 0)); transform-origin: top; background: ${c.clay}; transition: transform 0.6s ${motion.soft}; }
 .nv-tl-node { position: relative; opacity: 0.35; transition: opacity 0.5s ${motion.soft}; }
 .nv-tl-node.is-on, .nv-tl-node.is-past { opacity: 1; }
 .nv-tl-dot { position: absolute; left: -2.4rem; top: 0.35rem; width: 12px; height: 12px; border-radius: 999px; background: ${c.ink}; border: 2px solid ${c.onDarkLine}; }

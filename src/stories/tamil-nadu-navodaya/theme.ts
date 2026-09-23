@@ -241,10 +241,11 @@ export const globalCss = `
 .nv-prose > p strong { font-weight: 700; color: ${theme.colors.onDark}; }
 
 /* ---------- pull quote: a statement on the record, set as a poster ----------
-   No decorative quotation glyphs. A heavy grotesque block behind an ochre bar,
-   ranged left, with a mono attribution — the voice stated flat, not illuminated. */
-.nv-quote { position: relative; margin: clamp(3rem, 7vh, 5rem) 0; padding: 0 0 0 clamp(1.2rem, 2.5vw, 2rem); border-left: 4px solid ${theme.colors.clay}; }
-.nv-quote::before, .nv-quote p::after { content: none; }
+   No decorative quotation glyphs. A heavy grotesque block under a short ochre
+   rule, ranged left, with a mono attribution — the voice stated flat. */
+.nv-quote { position: relative; margin: clamp(3rem, 7vh, 5rem) 0; padding: 0; }
+.nv-quote::before { content: ""; display: block; width: 3rem; height: 3px; background: ${theme.colors.clay}; margin-bottom: clamp(1rem, 2.4vh, 1.5rem); }
+.nv-quote p::after { content: none; }
 .nv-quote p {
   font-family: ${theme.fonts.display};
   font-weight: 700;

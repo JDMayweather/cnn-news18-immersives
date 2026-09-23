@@ -1,5 +1,5 @@
 import gsap from "gsap";
-import { useScene, drawPaths } from "./motion";
+import { useScene, drawPaths, countUp } from "./motion";
 import { theme } from "../theme";
 import type { InterludeBar, InterludeVariant } from "../assets/article";
 
@@ -66,9 +66,10 @@ function Reserve(): React.JSX.Element {
   const circ = 2 * Math.PI * r;
   const pct = 0.75;
   return (
-    <g className="il-rise">
+    <g>
       <circle cx={cx} cy={cy} r={r} fill="none" stroke={C.leaf} strokeWidth={sw} opacity={0.35} />
       <circle
+        className="il-pie-arc"
         cx={cx}
         cy={cy}
         r={r}
@@ -76,9 +77,10 @@ function Reserve(): React.JSX.Element {
         stroke={C.clay}
         strokeWidth={sw}
         strokeDasharray={`${circ * pct} ${circ}`}
+        data-dash={circ * pct}
         transform={`rotate(-90 ${cx} ${cy})`}
       />
-      <text className="il-num il-num--big" x={cx} y={cy + 22} textAnchor="middle">75%</text>
+      <text className="il-num il-num--big il-pie-num" data-value="75" x={cx} y={cy + 22} textAnchor="middle">75%</text>
       <text className="il-pie-tag" x={cx} y={cy + 52} textAnchor="middle">RURAL SEATS</text>
     </g>
   );
@@ -129,6 +131,14 @@ export default function Interlude({
     if (fills.length) {
       gsap.from(fills, { scaleX: 0, transformOrigin: "left center", duration: 1.1, ease: "power3.out", stagger: 0.1, scrollTrigger: { trigger: root, start: "top 88%", once: true } });
     }
+    /* The donut arc sweeps from empty to its 75% fill as the panel enters, and
+       the centre figure counts up to meet it. */
+    const arc = root.querySelector<SVGCircleElement>(".il-pie-arc");
+    if (arc) {
+      const dash = Number(arc.dataset.dash ?? "0");
+      gsap.fromTo(arc, { strokeDashoffset: dash }, { strokeDashoffset: 0, duration: 1.4, ease: "power3.out", scrollTrigger: { trigger: root, start: "top 82%", once: true } });
+    }
+    countUp(root, ".il-pie-num", { duration: 1.4, start: "top 82%", format: (n) => `${Math.round(n)}%` });
   });
 
   const known = variant in SCENES;

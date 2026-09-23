@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { getAllStories } from "@/router/stories";
+import Preloader from "./Preloader";
 import "./Home.css";
 
 interface StoryMeta {
@@ -159,6 +160,9 @@ function Share({ slug, title }: { slug: string; title: string }) {
 export default function Home(): React.JSX.Element {
   const [stories, setStories] = useState<{ metadata: StoryMeta }[]>([]);
   const [activeTag, setActiveTag] = useState<string>("All");
+  const [hover, setHover] = useState<string | null>(null);
+  const previewRef = useRef<HTMLDivElement>(null);
+  const indexRef = useRef<HTMLOListElement>(null);
 
   useEffect(() => {
     const visible = getAllStories()
@@ -198,10 +202,52 @@ export default function Home(): React.JSX.Element {
     [stories, activeTag],
   );
 
-  const [lead, ...rest] = stories;
+  /* The floating cover-preview follows the cursor across the index (a fine
+     pointer only). Positioned imperatively so pointer moves never re-render. */
+  useEffect(() => {
+    const list = indexRef.current;
+    const pv = previewRef.current;
+    if (!list || !pv) return;
+    if (typeof matchMedia !== "function" || !matchMedia("(pointer: fine)").matches) return;
+    const move = (e: PointerEvent): void => {
+      pv.style.transform = `translate(${e.clientX + 28}px, ${e.clientY - 90}px)`;
+    };
+    list.addEventListener("pointermove", move);
+    return () => list.removeEventListener("pointermove", move);
+  }, [visible.length]);
+
+  const hovered = hover ? visible.find((s) => s.metadata.slug === hover) : undefined;
+
+  /* Index rows unmask on scroll — a staggered rise handled by the shared
+     observer pattern. Reduced-motion reveals them immediately. */
+  useEffect(() => {
+    const list = indexRef.current;
+    if (!list || typeof IntersectionObserver === "undefined") return;
+    const rows = Array.from(list.querySelectorAll<HTMLElement>(".index-row"));
+    if (typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      rows.forEach((r) => r.classList.add("is-in"));
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (!e.isIntersecting) continue;
+          e.target.classList.add("is-in");
+          io.unobserve(e.target);
+        }
+      },
+      { rootMargin: "0px 0px -12% 0px", threshold: 0.15 },
+    );
+    rows.forEach((r) => io.observe(r));
+    return () => io.disconnect();
+  }, [visible]);
+
+  const lead = stories[0];
 
   return (
     <div className="home-page">
+      <Preloader />
+      <div className="home-grain" aria-hidden="true" />
       {/* Utility strip */}
       <div className="top-strip">
         <div className="wrap top-strip-inner">
@@ -266,50 +312,44 @@ export default function Home(): React.JSX.Element {
         </div>
       )}
 
-      <main className="wrap site-main">
-        {/* Hero: lead + latest rail */}
+      <main className="site-main">
+        {/* Cinematic full-bleed lead */}
         {lead && (
-          <section className="hero" aria-labelledby="hero-title">
-            <div className="lead-wrap">
-              <Link to={`/${lead.metadata.slug}`} className="lead-card">
+          <section className="lead-hero" aria-labelledby="hero-title">
+            <div className="lead-hero-media">
+              <Cover meta={lead.metadata} eager />
+              <span className="lead-hero-scrim" aria-hidden="true" />
+            </div>
+            <div className="wrap lead-hero-inner">
+              <Link to={`/${lead.metadata.slug}`} className="lead-hero-copy">
                 <span className="kicker kicker--live">Lead Immersive</span>
-                <div className="lead-media">
-                  <Cover meta={lead.metadata} eager />
-                </div>
-                <h1 id="hero-title" className="lead-title">{lead.metadata.title}</h1>
+                <h1 id="hero-title" className="lead-hero-title">{lead.metadata.title}</h1>
                 {lead.metadata.description && (
-                  <p className="lead-dek">{lead.metadata.description}</p>
+                  <p className="lead-hero-dek">{lead.metadata.description}</p>
                 )}
+                <span className="lead-hero-cta">Enter the story <span aria-hidden="true">→</span></span>
                 <Byline meta={lead.metadata} />
               </Link>
               <Share slug={lead.metadata.slug} title={lead.metadata.title} />
             </div>
-            <aside className="rail" aria-label="More immersive stories">
-              <h2 className="rail-heading">More Immersives</h2>
-              {rest.length === 0 ? (
-                <p className="rail-empty">More visual investigations dropping soon.</p>
-              ) : (
-                rest.map((s) => (
-                  <Link key={s.metadata.slug} to={`/${s.metadata.slug}`} className="rail-item">
-                    <span className="rail-thumb">
-                      <Cover meta={s.metadata} />
-                    </span>
-                    <span className="rail-text">
-                      <span className="kicker">Immersive</span>
-                      <span className="rail-title">{s.metadata.title}</span>
-                      <Byline meta={s.metadata} short />
-                    </span>
-                  </Link>
-                ))
-              )}
-              <div className="rail-about">
-                <h3>What is an Immersive?</h3>
-                <p>Scrolly storytelling, data visuals and on-ground reporting — one story, told end to end.</p>
-              </div>
-            </aside>
           </section>
         )}
 
+        {/* Kinetic editorial ribbon */}
+        <div className="ribbon" aria-hidden="true">
+          <div className="ribbon-track">
+            {Array.from({ length: 2 }, (_, r) => (
+              <span className="ribbon-group" key={r}>
+                <span>Immersive Journalism</span><span className="ribbon-dot">/</span>
+                <span>Beyond the Headline</span><span className="ribbon-dot">/</span>
+                <span>Visual Investigations</span><span className="ribbon-dot">/</span>
+                <span>Scrollytelling</span><span className="ribbon-dot">/</span>
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="wrap">
         {/* All immersives */}
         <section className="all" aria-labelledby="all-heading">
           <div className="section-head">
@@ -334,37 +374,38 @@ export default function Home(): React.JSX.Element {
           {visible.length === 0 ? (
             <p className="empty">No immersive stories published yet.</p>
           ) : (
-            <div className="grid" role="list">
-              {visible.map((s) => (
-                <article key={s.metadata.slug} className="card" role="listitem">
-                  <Link to={`/${s.metadata.slug}`} className="card-link">
-                    <span className="card-media">
-                      <Cover meta={s.metadata} />
-                    </span>
-                    <span className="card-body">
-                      <span className="kicker">Immersive</span>
-                      <span className="card-title">{s.metadata.title}</span>
+            <ol className="index" ref={indexRef}>
+              {visible.map((s, i) => (
+                <li className="index-row" key={s.metadata.slug}>
+                  <Link
+                    to={`/${s.metadata.slug}`}
+                    className="index-link"
+                    onMouseEnter={() => setHover(s.metadata.slug)}
+                    onMouseLeave={() => setHover((h) => (h === s.metadata.slug ? null : h))}
+                  >
+                    <span className="index-num">{String(i + 1).padStart(2, "0")}</span>
+                    <span className="index-main">
+                      <span className="index-title">{s.metadata.title}</span>
                       {s.metadata.description && (
-                        <span className="card-dek">{s.metadata.description}</span>
+                        <span className="index-dek">{s.metadata.description}</span>
                       )}
-                      <Byline meta={s.metadata} short />
-                      {s.metadata.tags && s.metadata.tags.length > 0 && (
-                        <span className="tags">
-                          {s.metadata.tags.slice(0, 3).map((t) => (
-                            <span key={t} className="tag">{t}</span>
-                          ))}
-                        </span>
-                      )}
+                    </span>
+                    <span className="index-meta">
+                      {s.metadata.tags?.[0] && <span className="index-tag">{s.metadata.tags[0]}</span>}
+                      {s.metadata.readTimeMinutes && <span>{s.metadata.readTimeMinutes} min</span>}
+                      <span className="index-go" aria-hidden="true">→</span>
                     </span>
                   </Link>
-                  <span className="card-foot">
-                    <Share slug={s.metadata.slug} title={s.metadata.title} />
-                  </span>
-                </article>
+                </li>
               ))}
-            </div>
+            </ol>
           )}
+          {/* Cursor-following cover preview for the index (fine pointer only). */}
+          <div className={`index-preview${hovered ? " is-on" : ""}`} ref={previewRef} aria-hidden="true">
+            {hovered && <Cover meta={hovered.metadata} />}
+          </div>
         </section>
+        </div>
       </main>
 
       <footer className="footer" role="contentinfo">
