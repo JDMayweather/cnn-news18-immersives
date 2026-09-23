@@ -124,7 +124,7 @@ function BlockView({ block, dropCap }: { block: Block; dropCap?: boolean }): Rea
         return null;
       }
       return (
-        <div className="nv-fig nv-scene-wrap">
+        <div className={`nv-fig nv-scene-wrap nv-scene-wrap--${block.ref}`}>
           <p className="nv-fig-label">{block.label}</p>
           <ScrollScene label={block.label} steps={block.steps}>
             {(active) => <Visual active={active} />}

@@ -48,12 +48,18 @@ export const IMAGE_CREDITS: Record<string, string> = {
   supremeCourt: "The Supreme Court of India, New Delhi. (Image Courtesy: Subhashish Panigrahi/Wikimedia Commons, CC BY-SA 4.0)",
   jnvGate: "A Jawahar Navodaya Vidyalaya gate, Kottayam. (Image Courtesy: Vis M/Wikimedia Commons, CC BY-SA 4.0)",
   tnSchool: "School children at a government school in Tamil Nadu. (Image Courtesy: McKay Savage/Wikimedia Commons, CC BY 2.0)",
+  madrasHC: "The Madras High Court, Chennai. (Image Courtesy: TuckDB/Wikimedia Commons, CC BY 4.0)",
+  martyrs: "The memorial to the martyrs of the anti-Hindi language agitations, Tamil Nadu. (Image Courtesy: Surya Prakash S.A./Wikimedia Commons, CC BY-SA 3.0)",
+  assembly: "The Tamil Nadu Legislative Assembly–Secretariat complex, Chennai. (Image Courtesy: Prateek Karandikar/Wikimedia Commons, CC BY-SA 4.0)",
 };
 
 export const SHOTS = {
   supremeCourt: "https://commons.wikimedia.org/wiki/Special:FilePath/Supreme%20Court%20of%20India%2001.jpg?width=1600",
   jnvGate: "https://commons.wikimedia.org/wiki/Special:FilePath/Jawahar%20Navodaya%20Vidyalaya,%20Kottayam%20-%20gate.jpg?width=1280",
   tnSchool: "https://commons.wikimedia.org/wiki/Special:FilePath/Tamil%20Nadu%20school%20kids.jpg?width=1280",
+  madrasHC: "https://commons.wikimedia.org/wiki/Special:FilePath/Madras%20High%20Court%2C%20Chennai.jpg?width=1600",
+  martyrs: "https://commons.wikimedia.org/wiki/Special:FilePath/Mozhip%20por%20Thiyaagigal%20mandabam%202.JPG?width=1600",
+  assembly: "https://commons.wikimedia.org/wiki/Special:FilePath/Tamil%20Nadu%20legislative%20assembly-secretariat%20complex%20as%20seen%20from%20Chennai%20MRTS.JPG?width=1600",
 } as const;
 
 /* Scene steps: drawn from sentences the article already contains. */
@@ -110,6 +116,7 @@ export const CHAPTERS: Chapter[] = [
       { kind: "p", text: "Navodaya schools follow a three-language formula, but the arrangement is more nuanced than the shorthand often suggests. The medium of instruction in Classes 6 to 8 is the regional language. In Classes 9 and 10, the regional language remains the first language, with English as the second. The third language is linked to the school’s language and student-exchange arrangements." },
       { kind: "scene", ref: "language", label: "Two languages, or three", steps: LANGUAGE_STEPS },
       { kind: "p", text: "This distinction became important during an earlier round of litigation. In 2017, the Madras High Court examined Tamil Nadu’s objection to Navodaya schools. The Centre told the court that in Tamil-speaking areas, Tamil would be the medium of instruction in Classes 6 to 8 and the first language in Classes 9 and 10, with English as the second language." },
+      { kind: "panel", layout: "wide", src: SHOTS.madrasHC, alt: "The Madras High Court, Chennai", line: "The Madras High Court, 2017 — the scheme could accommodate Tamil", credit: IMAGE_CREDITS.madrasHC },
       { kind: "p", text: "The court found that the scheme could accommodate Tamil and did not, on that basis, violate Tamil Nadu’s Tamil Learning Act. Yet, Tamil Nadu continued to resist the scheme. That is because the state’s objection is not simply about whether Tamil can be taught. It is about the three-language framework itself." },
       { kind: "interlude", variant: "kolam", label: "Kolam", sub: "The threshold floor-art of the Tamil household — a cultural interleaf." },
     ],
@@ -120,12 +127,14 @@ export const CHAPTERS: Chapter[] = [
     title: "Why The Two-Language Policy Matters So Much",
     blocks: [
       { kind: "p", text: "Tamil Nadu’s two-language policy has deep roots in the state’s political history. Opposition to Hindi imposition was central to the Dravidian movement and became particularly powerful during the anti-Hindi agitations of the 1960s." },
+      { kind: "panel", layout: "wide", src: SHOTS.martyrs, alt: "The memorial to the martyrs of the anti-Hindi language agitations in Tamil Nadu", line: "The anti-Hindi agitations of the 1960s", credit: IMAGE_CREDITS.martyrs },
       { kind: "p", text: "Tamil and English subsequently became the foundation of the state’s school language policy, in contrast to the three-language formula followed at the national level. The Tamil Nadu Tamil Learning Act, 2006, gave statutory backing to the state’s language framework." },
       { kind: "scene", ref: "timeline", label: "A standoff, decade by decade", steps: TIMELINE_STEPS },
       { kind: "panel", layout: "wide", src: SHOTS.tnSchool, alt: "School children at a government school in Tamil Nadu", line: "Tamil Nadu runs its own schools, and its own syllabus", credit: IMAGE_CREDITS.tnSchool },
       { kind: "p", text: "It is in this backdrop that the Navodaya dispute acquires a political dimension that goes well beyond one school scheme with its political relevance carrying into Tamil Nadu’s new government led by chief Minister C Joseph Vijay." },
       { kind: "p", text: "The TVK government has retained the state’s two-language policy and opposed the National Education Policy’s three-language approach since coming into power. The state government’s position reflected in the Governor’s address to the Assembly in June. The government has also recently asserted Tamil’s place in another sphere." },
       { kind: "p", text: "In September, the Tamil Nadu Assembly unanimously passed a resolution seeking recognition of Tamil as the principal language of proceedings, judgments, decrees and orders in the Madras High Court. Chief Minister Vijay himself moved the resolution." },
+      { kind: "panel", layout: "wide", src: SHOTS.assembly, alt: "The Tamil Nadu Legislative Assembly and Secretariat complex in Chennai", line: "Chennai asserts Tamil’s place", credit: IMAGE_CREDITS.assembly },
       { kind: "p", text: "That makes the Navodaya dispute particularly relevant now. For the Vijay government, agreeing to a central school system that follows a three-language structure would sit uneasily alongside its stated commitment to the existing language policy." },
     ],
   },

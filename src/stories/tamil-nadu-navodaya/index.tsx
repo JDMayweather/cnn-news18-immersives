@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import Hero from "./components/Hero";
 import { refreshOnFonts, useRiseObserver } from "./components/motion";
 import Chapter from "./components/Chapter";
@@ -106,11 +106,37 @@ function useQuoteTilt(): void {
   }, []);
 }
 
+/* Full-bleed photo panels reveal with a diagonal clip-path wipe when they
+   scroll into view. Driven by an IntersectionObserver so the timing is the same
+   in every browser; reduced-motion / no-JS show the frame whole via CSS. */
+function usePanelReveal(): void {
+  useLayoutEffect(() => {
+    if (typeof window === "undefined" || typeof IntersectionObserver === "undefined") return;
+    const panels = Array.from(document.querySelectorAll<HTMLElement>(".nv-panel"));
+    if (!panels.length) return;
+    if (prefersReducedMotion()) return;
+    panels.forEach((p) => p.classList.add("nv-armed"));
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (!e.isIntersecting) continue;
+          e.target.classList.add("is-revealed");
+          io.unobserve(e.target);
+        }
+      },
+      { rootMargin: "0px 0px -15% 0px", threshold: 0.2 },
+    );
+    panels.forEach((p) => io.observe(p));
+    return () => io.disconnect();
+  }, []);
+}
+
 export default function TamilNaduNavodaya(): React.JSX.Element {
   useDocumentTitle();
   useEmbedResize();
   useRiseObserver();
   useQuoteTilt();
+  usePanelReveal();
   useEffect(() => refreshOnFonts(), []);
 
   return (

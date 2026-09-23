@@ -11,8 +11,7 @@ export default function Hero(): React.JSX.Element {
   const ref = useScene<HTMLElement>((root) => {
     const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
     tl.from(root.querySelectorAll(".h-line"), { yPercent: 114, duration: 1.15, stagger: 0.09 })
-      .from(root.querySelectorAll(".h-fade"), { opacity: 0, y: 18, duration: 0.95, stagger: 0.1 }, 0.4)
-      .from(root.querySelectorAll(".hero-dot"), { scale: 0, transformOrigin: "center", duration: 0.7, ease: "back.out(2)", stagger: 0.05 }, 0.5);
+      .from(root.querySelectorAll(".h-fade"), { opacity: 0, y: 18, duration: 0.95, stagger: 0.1 }, 0.4);
   });
 
   return (

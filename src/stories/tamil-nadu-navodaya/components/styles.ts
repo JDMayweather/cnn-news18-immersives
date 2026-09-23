@@ -531,22 +531,37 @@ section.nv-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
 
 /* ---------- narrow screens: the stage holds, the steps slide under it ------ */
 @media (max-width: 900px) {
-  .nv-scene { grid-template-columns: 1fr; gap: 0; }
-  .nv-scene-stage { top: 0; z-index: 3; gap: 0.45rem; padding: 0.7rem 0 0.5rem; background: ${c.paper}; border-bottom: 1px solid ${c.lineSoft}; }
-  .nv-scene-visual { min-height: 36svh; }
-  .nv-scene-count { text-align: left; }
-  .nv-step { min-height: 58svh; padding: 2rem 0 0 1.5rem; }
-  .nv-step-v { max-width: none; }
+  /* On a phone the pinned "visual + steps" split breaks (a two-column card or a
+     tall list cannot hold inside a short sticky stage). Un-pin it: the visual
+     sits at natural size, the steps read straight down beneath it, all steps
+     shown at full strength so nothing depends on a sticky highlight. */
+  .nv-scene { grid-template-columns: 1fr; gap: 1rem; }
+  .nv-scene-stage { position: static; top: auto; z-index: auto; gap: 0.6rem; padding: 0; background: transparent; border-bottom: 0; }
+  .nv-scene-visual { min-height: 0; }
+  .nv-scene-count { display: none; }
+  .nv-step { min-height: 0; padding: 1.1rem 0 0 1.4rem; opacity: 1; }
+  .nv-step-v { max-width: none; color: ${c.onDark}; }
+  .nv-step-k { color: ${c.clay}; }
+  .nv-step-rail > i { background: ${c.clay}; }
   .diverge-lanes { grid-template-columns: 1fr; }
 
   .nv-prose > blockquote.nv-quote--screen { padding-block: clamp(1.8rem, 5vh, 2.6rem); }
   .nv-prose > blockquote.nv-quote--screen > p { text-align: left; }
-  /* On a narrow measure, forcing each line flush both edges opens rivers, so
-     the statements read ranged-left like the body copy does here. */
   .nv-prose > blockquote.nv-quote--screen .nv-dline:not(:last-child) > span { text-align: left; text-align-last: left; }
-  .nv-open, .nv-open--low { min-height: auto; padding-block: clamp(0.8rem, 3vh, 1.4rem) clamp(0.7rem, 2.4vh, 1.2rem); }
-  .nv-open--bare, .nv-open--low.nv-open--bare { min-height: auto; padding-block: 1.6rem 1.2rem; }
-  .nv-open--stack .nv-open-num { font-size: clamp(4rem, 22vw, 7rem); }
+  .nv-open { min-height: auto; padding-block: clamp(1rem, 3.5vh, 1.8rem) clamp(0.5rem, 1.6vh, 0.9rem); }
+  .nv-open--bare { min-height: auto; padding-block: 1.4rem 0.9rem; }
+
+  /* The timeline visual is compact, so it can still pin on mobile: its stage
+     holds at the top while the steps scroll past. (The language split is a
+     tall two-column card and stays un-pinned above.) */
+  .nv-scene-wrap--timeline .nv-scene { gap: 0; }
+  .nv-scene-wrap--timeline .nv-scene-stage { position: sticky; top: 3.4rem; z-index: 3; padding: 0.7rem 0 0.6rem; background: ${c.ink}; border-bottom: 1px solid ${c.onDarkLine}; }
+  .nv-scene-wrap--timeline .nv-scene-count { display: block; text-align: left; color: ${c.onDarkFaint}; }
+  .nv-scene-wrap--timeline .nv-step { min-height: 46svh; }
+  /* Keep the pinned spine compact so it does not fill the screen. */
+  .nv-scene-wrap--timeline .nv-tl { padding-left: 2rem; gap: 0.7rem; }
+  .nv-scene-wrap--timeline .nv-tl-year { font-size: clamp(1.3rem, 6vw, 1.7rem); }
+  .nv-scene-wrap--timeline .nv-tl-label { font-size: 0.72rem; }
 }
 
 /* ---------- display type: Pretext line reveals for titles and screens ---
@@ -782,6 +797,15 @@ section.nv-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
     to { transform: scale(1.12) translateY(3.2%); }
   }
 }
+/* Diagonal wipe reveal, driven by an IntersectionObserver. Default state is
+   FULLY VISIBLE — the hidden start is only applied once JS adds .nv-armed, so
+   if anything about the reveal fails the photograph still shows. .is-revealed
+   sweeps the slanted edge across over ~1.15s. */
+.nv-panel.nv-armed { clip-path: polygon(0 0, 0 0, -40% 100%, -40% 100%); transition: clip-path 1.15s cubic-bezier(0.22, 1, 0.36, 1); }
+.nv-panel.nv-armed.is-revealed { clip-path: polygon(0 0, 140% 0, 100% 100%, 0 100%); }
+/* The caption rises in just after the wipe uncovers the frame. */
+.nv-panel.nv-armed .nv-panel-cap { opacity: 0; transform: translateY(26px); transition: opacity 0.7s ${motion.ease} 0.4s, transform 0.7s ${motion.ease} 0.4s; }
+.nv-panel.nv-armed.is-revealed .nv-panel-cap { opacity: 1; transform: none; }
 
 /* ---------- chapter opener: a low warm light behind the numeral ---------- */
 .nv-open { position: relative; }
@@ -887,6 +911,7 @@ section.nv-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
   .band-cell, .fact-row, .merit-pairs > div, .slip { transition: none; }
   .th-arc { transition: none; }
   .nv-panel img { animation: none; transform: none; }
+  .nv-panel-cap { animation: none; opacity: 1; transform: none; }
   .nv-dust { animation: none; }
   .nv-sound.is-on > span { animation: none; }
   .nv-prose > blockquote.nv-quote--screen > p { transition: none; }
