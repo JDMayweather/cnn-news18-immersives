@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { useScene, drawPaths } from "./motion";
 import { theme } from "../theme";
-import { THREE_QUESTIONS, type FigureRef } from "../assets/article";
+import { THREE_QUESTIONS, SHOTS, type FigureRef } from "../assets/article";
 
 /**
  * Figures, restricted to what the article states: the map that shows Tamil
@@ -222,25 +222,96 @@ export function ThreeAxis(): React.JSX.Element {
 }
 
 /**
- * The Supreme Court intervention, staged as three emphasis beats. Each is a
- * verbatim fragment of the article's own sentences on the hearing (the date,
- * the extension, the instruction) — set large and revealed on scroll. The full
- * sentence still runs, unchanged, in the paragraph above; nothing is added.
+ * The Supreme Court intervention, staged as a cinematic full-screen scene: it
+ * opens near-black on the date, the Court "enters," the photograph emerges, and
+ * two consequences land — the three-month extension and the call for dialogue.
+ * The big lines are editorial framing (UI, not article body); the numbers and
+ * the word "dialogue" are the article's own. The verbatim paragraph still runs
+ * above this, unchanged. Reduced-motion / embed fall back to a plain list.
  */
-const COURT_BEATS: string[] = ["September 17", "Three more months", "Dialogue"];
+const COURT_STEPS: { kicker: string; big: string; sub?: string }[] = [
+  { kicker: "17 September 2026", big: "The Supreme Court has entered the dispute." },
+  { kicker: "The order stands", big: "Three months", sub: "The state was given more time to comply." },
+  { kicker: "The instruction", big: "Dialogue", sub: "The Court urged the two sides to resolve their differences." },
+];
 
 export function CourtScene(): React.JSX.Element {
+  const [active, setActive] = useState(0);
+  const [pinned, setPinned] = useState(true);
+  const steps = useRef<(HTMLElement | null)[]>([]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const reduce = typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce || typeof IntersectionObserver === "undefined") {
+      setPinned(false);
+      return;
+    }
+    const nodes = steps.current.filter((n): n is HTMLElement => !!n);
+    if (!nodes.length) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (!e.isIntersecting) continue;
+          const i = nodes.indexOf(e.target as HTMLElement);
+          if (i >= 0) setActive(i);
+        }
+      },
+      { rootMargin: "-45% 0px -45% 0px", threshold: 0 },
+    );
+    nodes.forEach((n) => io.observe(n));
+    return () => io.disconnect();
+  }, []);
+
+  if (!pinned) {
+    return (
+      <div className="nv-fig nv-court">
+        <p className="nv-fig-label">The Court intervenes</p>
+        <ol className="nv-court-list">
+          {COURT_STEPS.map((s, i) => (
+            <li className="nv-court-beat nv-rise" key={i} style={{ ["--i" as string]: i }}>
+              <span className="nv-court-n" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
+              <span className="nv-court-big">{s.big}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+    );
+  }
+
   return (
-    <div className="nv-fig nv-court">
-      <p className="nv-fig-label">The Court intervenes</p>
-      <ol className="nv-court-list">
-        {COURT_BEATS.map((b, i) => (
-          <li className="nv-court-beat nv-rise" key={i} style={{ ["--i" as string]: i }}>
-            <span className="nv-court-n" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
-            <span className="nv-court-big">{b}</span>
-          </li>
+    <div className="nv-court-cine" role="group" aria-label="The Supreme Court intervenes">
+      <div className="nv-court-stage">
+        <img
+          className={`nv-court-img${active >= 0 ? " is-on" : ""}`}
+          src={SHOTS.supremeCourt}
+          alt=""
+          aria-hidden="true"
+          loading="lazy"
+          decoding="async"
+        />
+        <span className="nv-court-veil" aria-hidden="true" />
+        <div className="nv-court-frame">
+          {COURT_STEPS.map((s, i) => (
+            <div key={i} className={`nv-court-cine-beat${i === active ? " is-on" : i < active ? " is-past" : ""}`}>
+              <span className="nv-court-kicker">{s.kicker}</span>
+              <span className="nv-court-cine-big">{s.big}</span>
+              {s.sub && <span className="nv-court-cine-sub">{s.sub}</span>}
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="nv-court-track" aria-hidden="true">
+        {COURT_STEPS.map((_, i) => (
+          <span
+            className="nv-court-step"
+            key={i}
+            ref={(el) => {
+              steps.current[i] = el;
+            }}
+          />
         ))}
-      </ol>
+      </div>
     </div>
   );
 }

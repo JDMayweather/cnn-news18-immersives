@@ -980,4 +980,25 @@ section.nv-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
 .nv-court-beat:last-child { border-bottom: 1px solid ${c.onDarkLine}; }
 .nv-court-n { font-family: ${f.sans}; font-size: 0.9rem; font-weight: 600; letter-spacing: 0.14em; color: ${c.onDarkFaint}; font-variant-numeric: tabular-nums; }
 .nv-court-big { font-family: ${f.display}; font-weight: 800; text-transform: uppercase; font-size: clamp(2rem, 5.5vw, 4.4rem); line-height: 1; letter-spacing: -0.03em; color: ${c.clay}; }
+
+/* ---------- Supreme Court cinematic scene ---------- */
+.nv-prose > .nv-court-cine { width: 100vw; max-width: none; margin-inline: calc(50% - 50vw); }
+.nv-court-cine { position: relative; }
+.nv-court-stage { position: sticky; top: 0; height: 100svh; overflow: hidden; display: grid; align-content: center; background: #06080f; padding-inline: var(--nv-gutter); }
+.nv-court-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.08); transition: opacity var(--mo-cinematic, 1200ms) var(--ease-inout), transform 6s var(--ease-std); filter: saturate(0.9) contrast(1.05); }
+.nv-court-img.is-on { opacity: 0.5; transform: scale(1); }
+.nv-court-veil { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(6,8,15,0.7), rgba(6,8,15,0.45) 50%, rgba(6,8,15,0.85)); }
+.nv-court-frame { position: relative; z-index: 1; display: grid; max-width: 26ch; }
+.nv-court-cine-beat { grid-area: 1 / 1; display: grid; gap: 0.7rem; opacity: 0; transform: translateY(28px); transition: opacity var(--mo-editorial, 700ms) var(--ease-std), transform var(--mo-editorial, 700ms) var(--ease-std); }
+.nv-court-cine-beat.is-on { opacity: 1; transform: none; }
+.nv-court-cine-beat.is-past { opacity: 0; transform: translateY(-28px); }
+.nv-court-kicker { font-family: ${f.sans}; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: ${c.onDarkAccent}; }
+.nv-court-cine-big { font-family: ${f.display}; font-weight: 800; text-transform: uppercase; font-size: clamp(2.2rem, 6vw, 5rem); line-height: 1; letter-spacing: -0.03em; color: ${c.onDark}; }
+.nv-court-cine-sub { font-family: ${f.serif}; font-weight: 400; font-size: clamp(1rem, 1.6vw, 1.3rem); line-height: 1.5; color: ${c.onDarkDim}; }
+.nv-court-step { display: block; height: 100svh; }
+
+/* ---------- cold open: a full-screen bridge from hero to the story ---------- */
+.nv-coldopen { min-height: 82svh; display: grid; align-content: center; background: linear-gradient(180deg, #06080f, ${c.ink}); border-block: 1px solid ${c.onDarkLine}; }
+.nv-coldopen-kicker { font-family: ${f.sans}; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: ${c.onDarkAccent}; margin: 0 0 1rem; }
+.nv-coldopen-line { font-family: ${f.display}; font-weight: 800; text-transform: uppercase; font-size: clamp(2.2rem, 6.5vw, 5.5rem); line-height: 1; letter-spacing: -0.03em; color: ${c.onDark}; margin: 0; max-width: 18ch; }
 `;

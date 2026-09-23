@@ -120,6 +120,12 @@ export default function TamilNaduNavodaya(): React.JSX.Element {
       <div className="nv-grain" aria-hidden="true" />
       <ProgressIndicator />
       <Hero />
+      <section className="nv-coldopen" aria-hidden="true">
+        <div className="nv-wrap">
+          <p className="nv-coldopen-kicker nv-rise">The dispute</p>
+          <p className="nv-coldopen-line nv-rise">The question isn’t just about schools.</p>
+        </div>
+      </section>
       {CHAPTERS.map((chapter, i) => (
         <Chapter key={chapter.id} chapter={chapter} index={i} />
       ))}
