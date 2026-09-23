@@ -148,7 +148,7 @@ function BlockView({ block, dropCap }: { block: Block; dropCap?: boolean }): Rea
         );
       }
       return (
-        <figure className="nv-panel">
+        <figure className="nv-panel nv-rise">
           <Photo block={block} />
           <figcaption className="nv-panel-cap">
             {block.line ? <span className="nv-panel-line">{block.line}</span> : null}

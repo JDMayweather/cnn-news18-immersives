@@ -102,7 +102,7 @@ export const CHAPTERS: Chapter[] = [
     blocks: [
       { kind: "p", text: "Jawahar Navodaya Vidyalayas, or JNVs, were conceived as residential schools providing quality education to talented children, particularly from rural areas. The scheme envisages one JNV in each district, with at least 75 per cent of seats reserved for students selected from rural areas." },
       { kind: "panel", layout: "wide", src: SHOTS.jnvGate, alt: "The gate of a Jawahar Navodaya Vidyalaya", line: "Residential schools for talented children, particularly from rural areas", credit: IMAGE_CREDITS.jnvGate },
-      { kind: "interlude", variant: "reserve", label: "One school per district, most seats rural", bars: [ { label: "Seats reserved for rural students", value: "at least 75%", pct: 75 } ], notes: ["The scheme envisages one JNV in each district, with at least 75 per cent of seats reserved for students selected from rural areas."] },
+      { kind: "interlude", variant: "reserve", label: "One school per district, most seats rural", notes: ["The scheme envisages one JNV in each district, with at least 75 per cent of seats reserved for students selected from rural areas."] },
       { kind: "figure", ref: "loneMap" },
       { kind: "p", text: "Tamil Nadu, however, never accepted the scheme. Government records have repeatedly identified it as the sole state that has not done so. The Centre has also said that setting up a JNV requires a proposal from the concerned state government or Union Territory administration, and that Tamil Nadu has not consented to the implementation of the scheme." },
       { kind: "p", solo: true, text: "So why has Chennai consistently said no? The answer takes us back to the language question." },

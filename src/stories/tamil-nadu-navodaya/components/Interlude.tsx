@@ -55,9 +55,38 @@ function Kolam(): React.JSX.Element {
   );
 }
 
+/* A donut pie: the 75% of JNV seats reserved for rural students, drawn as a
+   ring three-quarters filled in ochre against a muted remainder, the figure
+   printed in the middle. */
+function Reserve(): React.JSX.Element {
+  const cx = W / 2;
+  const cy = H / 2;
+  const r = 108;
+  const sw = 48;
+  const circ = 2 * Math.PI * r;
+  const pct = 0.75;
+  return (
+    <g className="il-rise">
+      <circle cx={cx} cy={cy} r={r} fill="none" stroke={C.leaf} strokeWidth={sw} opacity={0.35} />
+      <circle
+        cx={cx}
+        cy={cy}
+        r={r}
+        fill="none"
+        stroke={C.clay}
+        strokeWidth={sw}
+        strokeDasharray={`${circ * pct} ${circ}`}
+        transform={`rotate(-90 ${cx} ${cy})`}
+      />
+      <text className="il-num il-num--big" x={cx} y={cy + 22} textAnchor="middle">75%</text>
+      <text className="il-pie-tag" x={cx} y={cy + 52} textAnchor="middle">RURAL SEATS</text>
+    </g>
+  );
+}
+
 const SCENES: Record<InterludeVariant, (() => React.JSX.Element) | null> = {
   kolam: Kolam,
-  reserve: null, /* the bar carries it */
+  reserve: Reserve,
 };
 
 function Bars({ bars }: { bars: InterludeBar[] }): React.JSX.Element {

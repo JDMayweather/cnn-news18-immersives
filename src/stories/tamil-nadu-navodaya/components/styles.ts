@@ -89,6 +89,7 @@ section.nv-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
 .il-key li::before { content: ""; position: absolute; left: 0; top: 0.62em; width: 0.6rem; height: 2px; border-radius: 2px; background: ${c.clay}; }
 .il-num { font-family: ${f.display}; font-weight: 600; font-size: 26px; letter-spacing: -0.02em; fill: ${c.onDark}; }
 .il-num--big { font-weight: 800; font-size: 62px; fill: ${c.clay}; }
+.il-pie-tag { font-family: ${f.sans}; font-weight: 600; font-size: 15px; letter-spacing: 3px; fill: ${c.onDarkFaint}; }
 .il-notes { list-style: none; margin: 0.15rem 0 0; padding: 0; display: grid; gap: 0.4rem; }
 .il-notes li { position: relative; padding-left: 1.05rem; font-family: ${f.sans}; font-size: 0.84rem; line-height: 1.62; color: ${c.onDarkFaint}; }
 .il-notes li::before { content: ""; position: absolute; left: 0; top: 0.62em; width: 0.5rem; height: 1px; background: ${c.clay}; }
@@ -797,15 +798,19 @@ section.nv-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
     to { transform: scale(1.12) translateY(3.2%); }
   }
 }
-/* Diagonal wipe reveal, driven by an IntersectionObserver. Default state is
-   FULLY VISIBLE — the hidden start is only applied once JS adds .nv-armed, so
-   if anything about the reveal fails the photograph still shows. .is-revealed
-   sweeps the slanted edge across over ~1.15s. */
-.nv-panel.nv-armed { clip-path: polygon(0 0, 0 0, -40% 100%, -40% 100%); transition: clip-path 1.15s cubic-bezier(0.22, 1, 0.36, 1); }
-.nv-panel.nv-armed.is-revealed { clip-path: polygon(0 0, 140% 0, 100% 100%, 0 100%); }
+/* Diagonal wipe reveal, keyed to the shared rise observer (adds .is-in when the
+   panel enters view — the same mechanism every figure uses, so it is reliable).
+   The panel is FULLY VISIBLE by default; the animation only ever plays forward
+   to visible, so a photograph can never be left hidden. */
+.nv-panel.nv-rise { opacity: 1; transform: none; }
+.nv-panel.nv-rise.is-in { animation: nv-wipe 1.2s cubic-bezier(0.22, 1, 0.36, 1) both; }
+@keyframes nv-wipe {
+  0% { clip-path: polygon(0 0, 0 0, -40% 100%, -40% 100%); }
+  100% { clip-path: polygon(0 0, 140% 0, 100% 100%, 0 100%); }
+}
 /* The caption rises in just after the wipe uncovers the frame. */
-.nv-panel.nv-armed .nv-panel-cap { opacity: 0; transform: translateY(26px); transition: opacity 0.7s ${motion.ease} 0.4s, transform 0.7s ${motion.ease} 0.4s; }
-.nv-panel.nv-armed.is-revealed .nv-panel-cap { opacity: 1; transform: none; }
+.nv-panel.nv-rise .nv-panel-cap { opacity: 0; transform: translateY(26px); }
+.nv-panel.nv-rise.is-in .nv-panel-cap { opacity: 1; transform: none; transition: opacity 0.7s ${motion.ease} 0.5s, transform 0.7s ${motion.ease} 0.5s; }
 
 /* ---------- chapter opener: a low warm light behind the numeral ---------- */
 .nv-open { position: relative; }
@@ -911,7 +916,8 @@ section.nv-chapter { max-width: none; padding-block: ${theme.space.sectionY}; pa
   .band-cell, .fact-row, .merit-pairs > div, .slip { transition: none; }
   .th-arc { transition: none; }
   .nv-panel img { animation: none; transform: none; }
-  .nv-panel-cap { animation: none; opacity: 1; transform: none; }
+  .nv-panel.nv-rise, .nv-panel.nv-rise.is-in { animation: none !important; clip-path: none !important; }
+  .nv-panel-cap, .nv-panel.nv-rise .nv-panel-cap { animation: none; opacity: 1 !important; transform: none !important; }
   .nv-dust { animation: none; }
   .nv-sound.is-on > span { animation: none; }
   .nv-prose > blockquote.nv-quote--screen > p { transition: none; }
